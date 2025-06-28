@@ -8,6 +8,7 @@ import { uint256 } from "starknet";
 export const name = "ERC20";
 export const refreshInCron = false;
 export const refreshOnTransfer = true;
+export const networks = ["mainnet", "sepolia"];
 
 export const fields: StarkyModuleField[] = [
   {
