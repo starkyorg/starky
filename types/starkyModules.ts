@@ -20,6 +20,7 @@ export type StarkyModule = {
   shouldHaveRole: ShouldHaveRole;
   refreshInCron: boolean;
   refreshOnTransfer: boolean;
+  networks: string[];
 };
 
 export type StarkyModules = {
