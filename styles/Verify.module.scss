@@ -94,12 +94,15 @@
 }
 
 .chartContainer {
-  width: 30%;
-  height: 250px;
+  width: 250px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
   margin-top: 20px;
 }
 
 .noDataMessage {
   text-align: center;
-  margin-top: 20px;
+  font-style: italic;
 }

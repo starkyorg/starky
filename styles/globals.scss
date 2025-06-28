@@ -12,7 +12,7 @@ body {
   padding: 105px 108px;
   height: calc(100% - 210px);
   @media (max-width: 450px) {
-    padding: 46px;
+    padding: 46px 20px;
     height: calc(100% - 92px);
   }
 }
