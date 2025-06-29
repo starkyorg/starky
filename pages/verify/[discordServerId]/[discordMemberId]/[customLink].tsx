@@ -99,16 +99,22 @@ const VerifyPage = ({
       wallet.provider.chainId ||
       wallet.chainId;
     setChainId(chain);
+
+    // Always set the account so disconnect button is available
+    setAccount(wallet.account);
+
     if (
       starknetNetwork !==
       Object.keys(chainAliasByNetwork)[
-        Object.values(chainAliasByNetwork).findIndex((aliases) =>
-          aliases.includes(chain)
-        )
+      Object.values(chainAliasByNetwork).findIndex((aliases) =>
+        aliases.includes(chain)
+      )
       ]
-    )
+    ) {
       setWrongStarknetNetwork(true);
-    else setAccount(wallet.account);
+    } else {
+      setWrongStarknetNetwork(false);
+    }
 
     const isArgentWallet = wallet.id.toLowerCase().includes("argent");
     setIsArgent(isArgentWallet);
@@ -178,7 +184,6 @@ const VerifyPage = ({
       return;
     }
 
-    setAccount(wallet.account);
     setWrongStarknetNetwork(false);
   }, [starknetNetwork]);
 
@@ -266,7 +271,7 @@ const VerifyPage = ({
           )}
         </div>
       )}
-      {account && !verifyingSignature && !verifiedSignature && (
+      {account && !verifyingSignature && !verifiedSignature && !wrongStarknetNetwork && (
         <>
           <br></br>
           <button className={styles.verify} onClick={sign}>
@@ -334,6 +339,7 @@ const VerifyPage = ({
           verifiedSignature={verifiedSignature}
           onDisconnect={() => {
             setAccount(undefined);
+            setWrongStarknetNetwork(false);
             disconnect().catch(WatchTowerLogger.error);
           }}
         />
@@ -353,7 +359,7 @@ const VerifyPage = ({
             <span>
               Identity: <b>verified</b>
             </span>
-            <h1>YOU’RE ALL SET FREN</h1>
+            <h1>YOU&apos;RE ALL SET FREN</h1>
             <span>you shall close this tab</span>
           </div>
         )}
@@ -387,9 +393,8 @@ export async function getServerSideProps({ res, query }: any) {
     const serverInfo = await getDiscordServerInfo(`${query.discordServerId}`);
     discordServerName = serverInfo.name;
     discordServerIcon = serverInfo.icon
-      ? `https://cdn.discordapp.com/icons/${query.discordServerId}/${
-          serverInfo.icon
-        }${serverInfo.icon.startsWith("a_") ? ".gif" : ".png"}`
+      ? `https://cdn.discordapp.com/icons/${query.discordServerId}/${serverInfo.icon
+      }${serverInfo.icon.startsWith("a_") ? ".gif" : ".png"}`
       : null;
   } catch (e: any) {
     WatchTowerLogger.error(e.message, e);
