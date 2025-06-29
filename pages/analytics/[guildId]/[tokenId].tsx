@@ -98,8 +98,8 @@ const AnalyticsPage = ({
         <b>Distribution of networks among connected wallets:</b>
       </div>
 
-      {Object.keys(userStats).length > 0 ? (
-        <div className={styles.chartContainer}>
+      <div className={styles.chartContainer}>
+        {Object.keys(userStats).length > 0 ? (
           <Pie
             data={data}
             options={{
@@ -107,12 +107,12 @@ const AnalyticsPage = ({
               plugins: { legend: { position: "top" } },
             }}
           />
-        </div>
-      ) : (
-        <p className={styles.noDataMessage}>
-          No data available for the selected guild.
-        </p>
-      )}
+        ) : (
+          <p className={styles.noDataMessage}>
+            No user has connected their wallet at the moment.
+          </p>
+        )}
+      </div>
 
       <div className={styles.sectionHeading}>
         <SocialLinks />
