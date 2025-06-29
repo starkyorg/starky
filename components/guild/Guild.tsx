@@ -1,5 +1,5 @@
-import Image from "next/image";
-import styles from "../../styles/Verify.module.scss";
+import Image from 'next/image';
+import styles from '../../styles/Verify.module.scss';
 
 type GuildProps = {
   discordServerName: string;
@@ -12,7 +12,7 @@ const Guild = ({ discordServerName, discordServerIcon }: GuildProps) => {
       Discord server:
       <span className={styles.serverDisplay}>
         {discordServerIcon ? (
-          <img
+          <Image
             src={discordServerIcon}
             alt="Discord Server Icon"
             className={styles.discordIcon}
