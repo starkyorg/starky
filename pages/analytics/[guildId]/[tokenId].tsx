@@ -1,5 +1,3 @@
-import React from "react";
-import { Pie } from "react-chartjs-2";
 import {
   ArcElement,
   CategoryScale,
@@ -10,15 +8,17 @@ import {
   Tooltip,
 } from "chart.js";
 import { NextPageContext } from "next";
+import { Pie } from "react-chartjs-2";
 import Logo from "../../../components/Logo";
-import SocialLinks from "../../../components/SocialLinks";
 import RedirectMessage from "../../../components/RedirectMessage";
-import { getDiscordServerInfo } from "../../../discord/utils";
+import SocialLinks from "../../../components/SocialLinks";
+import Guild from "../../../components/guild/Guild";
 import {
   DiscordMemberRepository,
   DiscordServerRepository,
   setupDb,
 } from "../../../db";
+import { getDiscordServerInfo } from "../../../discord/utils";
 
 import styles from "../../../styles/Verify.module.scss";
 import { validateToken } from "../../../utils/validateToken";
@@ -37,7 +37,10 @@ interface AnalyticsPageProps {
   userStats: Record<string, number>;
   tokenExpired?: boolean;
   serverNotFound?: boolean;
-  guildName?: string;
+  guildInfo?: {
+    name: string;
+    icon: string | null;
+  };
 }
 
 interface AnalyticsPageContext extends NextPageContext {
@@ -52,7 +55,7 @@ const AnalyticsPage = ({
   userStats,
   tokenExpired,
   serverNotFound,
-  guildName,
+  guildInfo,
 }: AnalyticsPageProps) => {
   if (tokenExpired) {
     return (
@@ -90,8 +93,13 @@ const AnalyticsPage = ({
         <Logo />
       </div>
       <div className={styles.serverInfo}>
-        <span>Server Analytics for Guild:</span>{" "}
-        <b className={styles.serverDisplay}> {guildName}</b>
+        <span>Server Analytics for Guild:</span>
+        <span className={styles.serverDisplay}>
+          <Guild
+            discordServerName={guildInfo!.name}
+            discordServerIcon={guildInfo!.icon}
+          />
+        </span>
       </div>
 
       <div className={styles.sectionHeading}>
@@ -154,7 +162,17 @@ export const getServerSideProps = async ({ query }: AnalyticsPageContext) => {
 
   const guild = await getDiscordServerInfo(guildId);
 
-  const guildName = guild.name;
+  const buildDiscordIconUrl = (iconHash: string) => {
+    // Animated icons start with "a_" and use .gif, static icons use .png
+    const extension = iconHash.startsWith("a_") ? ".gif" : ".png";
+
+    return `https://cdn.discordapp.com/icons/${guildId}/${iconHash}${extension}`;
+  };
+
+  const guildInfo = {
+    name: guild.name,
+    icon: guild.icon ? buildDiscordIconUrl(guild.icon) : null,
+  };
 
   const members = await DiscordMemberRepository.findBy({
     discordServerId: guildId,
@@ -174,7 +192,7 @@ export const getServerSideProps = async ({ query }: AnalyticsPageContext) => {
   );
 
   return {
-    props: { userStats: formattedUserStats, guildName },
+    props: { userStats: formattedUserStats, guildInfo },
   };
 };
 
