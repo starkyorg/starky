@@ -6,22 +6,22 @@ import {
   LinearScale,
   Title,
   Tooltip,
-} from 'chart.js';
-import { NextPageContext } from 'next';
-import { Pie } from 'react-chartjs-2';
-import Logo from '../../../components/Logo';
-import RedirectMessage from '../../../components/RedirectMessage';
-import SocialLinks from '../../../components/SocialLinks';
-import Guild from '../../../components/guild/Guild';
+} from "chart.js";
+import { NextPageContext } from "next";
+import { Pie } from "react-chartjs-2";
+import Logo from "../../../components/Logo";
+import RedirectMessage from "../../../components/RedirectMessage";
+import SocialLinks from "../../../components/SocialLinks";
+import Guild from "../../../components/guild/Guild";
 import {
   DiscordMemberRepository,
   DiscordServerRepository,
   setupDb,
-} from '../../../db';
-import { getDiscordServerInfo } from '../../../discord/utils';
+} from "../../../db";
+import { getDiscordServerInfo } from "../../../discord/utils";
 
-import styles from '../../../styles/Verify.module.scss';
-import { validateToken } from '../../../utils/validateToken';
+import styles from "../../../styles/Verify.module.scss";
+import { validateToken } from "../../../utils/validateToken";
 
 // Register chart components
 ChartJS.register(
@@ -82,7 +82,7 @@ const AnalyticsPage = ({
     datasets: [
       {
         data: Object.values(userStats),
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
       },
     ],
   };
@@ -112,7 +112,7 @@ const AnalyticsPage = ({
             data={data}
             options={{
               responsive: true,
-              plugins: { legend: { position: 'top' } },
+              plugins: { legend: { position: "top" } },
             }}
           />
         </div>
@@ -136,7 +136,7 @@ export const getServerSideProps = async ({ query }: AnalyticsPageContext) => {
   if (!guildId || !tokenId) {
     return {
       redirect: {
-        destination: '/',
+        destination: "/",
         permanent: false,
       },
     };
@@ -164,7 +164,7 @@ export const getServerSideProps = async ({ query }: AnalyticsPageContext) => {
 
   const buildDiscordIconUrl = (iconHash: string) => {
     // Animated icons start with "a_" and use .gif, static icons use .png
-    const extension = iconHash.startsWith('a_') ? '.gif' : '.png';
+    const extension = iconHash.startsWith("a_") ? ".gif" : ".png";
 
     return `https://cdn.discordapp.com/icons/${guildId}/${iconHash}${extension}`;
   };
