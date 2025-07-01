@@ -243,34 +243,33 @@ const VerifyPage = ({
           >
             {isSwitching ? "Switching Networks..." : "Connect Starknet Wallet"}
           </button>
+        </div>
+      )}
+      
+      {/* Network mismatch message - show for all non-Argent wallets when wrongStarknetNetwork is true  */}
+      {wrongStarknetNetwork && !isArgent && (
+        <div className="danger">
+          this discord server has been configured to verify identity on
+          the {starknetNetwork} network.
+          <br />
+          please switch your browser wallet to the {starknetNetwork} network then connect again
+        </div>
+      )}
 
-          {wrongStarknetNetwork && (
-            <div className="danger">
-              {isArgent ? (
-                isSwitching ? (
-                  "Confirm network switch in your Argent wallet..."
-                ) : (
-                  <>
-                    {switchError && "Network switch failed. Please try again."}
-                    {showSuccess &&
-                      "Network switched successfully! Connecting..."}
-                  </>
-                )
-              ) : (
-                <div className="danger">
-                  this discord server has been configured to verify identity on
-                  the {starknetNetwork} network.
-                  <br />
-                  please switch your browser wallet to the {
-                    starknetNetwork
-                  }{" "}
-                  network then connect again
-                </div>
-              )}
-            </div>
+      {/* Argent-specific network switching UI */}
+      {wrongStarknetNetwork && isArgent && (
+        <div className="danger">
+          {isSwitching ? (
+            "Confirm network switch in your Argent wallet..."
+          ) : (
+            <>
+              {switchError && "Network switch failed. Please try again."}
+              {showSuccess && "Network switched successfully! Connecting..."}
+            </>
           )}
         </div>
       )}
+
       {account && !verifyingSignature && !verifiedSignature && !wrongStarknetNetwork && (
         <>
           <br></br>
