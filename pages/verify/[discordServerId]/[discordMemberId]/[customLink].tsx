@@ -99,6 +99,10 @@ const VerifyPage = ({
       wallet.provider.chainId ||
       wallet.chainId;
     setChainId(chain);
+
+    // Always set the account so disconnect button is available
+    setAccount(wallet.account);
+
     if (
       starknetNetwork !==
       Object.keys(chainAliasByNetwork)[
@@ -106,9 +110,11 @@ const VerifyPage = ({
           aliases.includes(chain)
         )
       ]
-    )
+    ) {
       setWrongStarknetNetwork(true);
-    else setAccount(wallet.account);
+    } else {
+      setWrongStarknetNetwork(false);
+    }
 
     const isArgentWallet = wallet.id.toLowerCase().includes("argent");
     setIsArgent(isArgentWallet);
@@ -178,7 +184,6 @@ const VerifyPage = ({
       return;
     }
 
-    setAccount(wallet.account);
     setWrongStarknetNetwork(false);
   }, [starknetNetwork]);
 
@@ -238,42 +243,46 @@ const VerifyPage = ({
           >
             {isSwitching ? "Switching Networks..." : "Connect Starknet Wallet"}
           </button>
+        </div>
+      )}
 
-          {wrongStarknetNetwork && (
-            <div className="danger">
-              {isArgent ? (
-                isSwitching ? (
-                  "Confirm network switch in your Argent wallet..."
-                ) : (
-                  <>
-                    {switchError && "Network switch failed. Please try again."}
-                    {showSuccess &&
-                      "Network switched successfully! Connecting..."}
-                  </>
-                )
-              ) : (
-                <div className="danger">
-                  this discord server has been configured to verify identity on
-                  the {starknetNetwork} network.
-                  <br />
-                  please switch your browser wallet to the {
-                    starknetNetwork
-                  }{" "}
-                  network then connect again
-                </div>
-              )}
-            </div>
+      {/* Network mismatch message - show for all non-Argent wallets when wrongStarknetNetwork is true  */}
+      {wrongStarknetNetwork && !isArgent && (
+        <div className="danger">
+          <br />
+          this discord server has been configured to verify identity on the{" "}
+          {starknetNetwork} network.
+          <br />
+          please switch your browser wallet to the {starknetNetwork} network
+          then connect again
+        </div>
+      )}
+
+      {/* Argent-specific network switching UI */}
+      {wrongStarknetNetwork && isArgent && (
+        <div className="danger">
+          {isSwitching ? (
+            "Confirm network switch in your Argent wallet..."
+          ) : (
+            <>
+              {switchError && "Network switch failed. Please try again."}
+              {showSuccess && "Network switched successfully! Connecting..."}
+            </>
           )}
         </div>
       )}
-      {account && !verifyingSignature && !verifiedSignature && (
-        <>
-          <br></br>
-          <button className={styles.verify} onClick={sign}>
-            Sign a message to verify your identity
-          </button>
-        </>
-      )}
+
+      {account &&
+        !verifyingSignature &&
+        !verifiedSignature &&
+        !wrongStarknetNetwork && (
+          <>
+            <br></br>
+            <button className={styles.verify} onClick={sign}>
+              Sign a message to verify your identity
+            </button>
+          </>
+        )}
       {verifyingSignature && (
         <span className={styles.sign}>verifying your signature...</span>
       )}
@@ -334,6 +343,7 @@ const VerifyPage = ({
           verifiedSignature={verifiedSignature}
           onDisconnect={() => {
             setAccount(undefined);
+            setWrongStarknetNetwork(false);
             disconnect().catch(WatchTowerLogger.error);
           }}
         />
@@ -353,7 +363,7 @@ const VerifyPage = ({
             <span>
               Identity: <b>verified</b>
             </span>
-            <h1>YOU’RE ALL SET FREN</h1>
+            <h1>YOU&apos;RE ALL SET FREN</h1>
             <span>you shall close this tab</span>
           </div>
         )}
