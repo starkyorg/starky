@@ -106,9 +106,9 @@ const VerifyPage = ({
     if (
       starknetNetwork !==
       Object.keys(chainAliasByNetwork)[
-      Object.values(chainAliasByNetwork).findIndex((aliases) =>
-        aliases.includes(chain)
-      )
+        Object.values(chainAliasByNetwork).findIndex((aliases) =>
+          aliases.includes(chain)
+        )
       ]
     ) {
       setWrongStarknetNetwork(true);
@@ -245,14 +245,16 @@ const VerifyPage = ({
           </button>
         </div>
       )}
-      
+
       {/* Network mismatch message - show for all non-Argent wallets when wrongStarknetNetwork is true  */}
       {wrongStarknetNetwork && !isArgent && (
         <div className="danger">
-          this discord server has been configured to verify identity on
-          the {starknetNetwork} network.
           <br />
-          please switch your browser wallet to the {starknetNetwork} network then connect again
+          this discord server has been configured to verify identity on the{" "}
+          {starknetNetwork} network.
+          <br />
+          please switch your browser wallet to the {starknetNetwork} network
+          then connect again
         </div>
       )}
 
@@ -270,14 +272,17 @@ const VerifyPage = ({
         </div>
       )}
 
-      {account && !verifyingSignature && !verifiedSignature && !wrongStarknetNetwork && (
-        <>
-          <br></br>
-          <button className={styles.verify} onClick={sign}>
-            Sign a message to verify your identity
-          </button>
-        </>
-      )}
+      {account &&
+        !verifyingSignature &&
+        !verifiedSignature &&
+        !wrongStarknetNetwork && (
+          <>
+            <br></br>
+            <button className={styles.verify} onClick={sign}>
+              Sign a message to verify your identity
+            </button>
+          </>
+        )}
       {verifyingSignature && (
         <span className={styles.sign}>verifying your signature...</span>
       )}
@@ -392,8 +397,9 @@ export async function getServerSideProps({ res, query }: any) {
     const serverInfo = await getDiscordServerInfo(`${query.discordServerId}`);
     discordServerName = serverInfo.name;
     discordServerIcon = serverInfo.icon
-      ? `https://cdn.discordapp.com/icons/${query.discordServerId}/${serverInfo.icon
-      }${serverInfo.icon.startsWith("a_") ? ".gif" : ".png"}`
+      ? `https://cdn.discordapp.com/icons/${query.discordServerId}/${
+          serverInfo.icon
+        }${serverInfo.icon.startsWith("a_") ? ".gif" : ".png"}`
       : null;
   } catch (e: any) {
     WatchTowerLogger.error(e.message, e);
