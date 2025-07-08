@@ -28,7 +28,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     !body.discordServerId ||
     !body.discordMemberId ||
     !body.customLink ||
-    !body.network
+    !body.network ||
+    !body.pubkey
   ) {
     res.status(400).json({
       message: "Incorrect body",
@@ -73,7 +74,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     body.account,
     messageHexHash,
     body.signature,
-    body.network
+    body.network, 
+    body.pubkey
   );
   if (!signatureValid) {
     return res.status(400).json({ message: "Signature is invalid", error });
