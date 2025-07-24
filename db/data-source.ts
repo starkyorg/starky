@@ -1,10 +1,8 @@
 import { DataSource } from "typeorm";
-
 import "reflect-metadata";
 
 import config from "../config";
 
-import { DiscordAnalyticsToken } from "./entity/DiscordAnalyticsToken";
 import { DiscordDashboardToken } from "./entity/DiscordDashboardToken";
 import { DiscordServer } from "./entity/DiscordServer";
 import { DiscordServerConfig } from "./entity/DiscordServerConfig";
@@ -25,10 +23,10 @@ export const AppDataSource = new DataSource({
     DiscordServerConfig,
     DiscordMember,
     NetworkStatus,
-    DiscordAnalyticsToken,
     DiscordDashboardToken,
   ],
   migrations: [__dirname + "/migration/**/*.{js,ts}"],
   migrationsTableName: "migrations",
   subscribers: [],
 });
+
