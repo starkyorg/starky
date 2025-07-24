@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { ClientError, createClient, Status } from "@apibara/protocol";
 import { type Abi, Filter, StarknetStream } from "@apibara/starknet";
 import { events } from "starknet";
