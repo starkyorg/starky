@@ -1,19 +1,29 @@
 .backButton {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background-color: #f3f4f6;
-    border-radius: 6px;
-    font-weight: 500;
-    color: #111827;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-  
-    &:hover {
-      background-color: #e5e7eb;
-    }
-  
-    &:active {
-      background-color: #d1d5db;
-    }
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #f5f1e8; 
+  font-weight: 500;
+  color: #2d2d2d; 
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid #e8dcc6; 
+
+  &:hover {
+    background-color: #ede4d3; 
+    color: #1a1a1a; 
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  
+
+  &:active {
+    background-color: #e0d2bb; 
+    transform: translateY(0); 
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  // Enhanced focus state for accessibility
+  &:focus {
+    outline: 2px solid #c3453f;
+    outline-offset: 2px;
+  }
+}
