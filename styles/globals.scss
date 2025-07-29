@@ -8,6 +8,11 @@ body {
   margin: 0;
 }
 
+:root {
+  --button-primary-color: #2d3748;
+  --button-primary-hover-color: #1a202c;
+}
+
 .container {
   padding: 105px 108px;
   height: calc(100% - 210px);

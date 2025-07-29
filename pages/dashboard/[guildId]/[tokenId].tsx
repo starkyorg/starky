@@ -4,6 +4,7 @@ import SocialLinks from "../../../components/SocialLinks";
 import styles from "../../../styles/Dashboard.module.scss";
 import { validateDashboardToken } from "../../../utils/validateDashboardToken";
 import RedirectMessage from "../../../components/RedirectMessage"; // optional if you want same UI
+import DownloadButton from "../../../components/DownloadButton";
 
 import {
   setupDb,
@@ -66,18 +67,12 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
       <Guild
         discordServerName={discordServerName!}
         discordServerIcon={discordServerIcon}
-      />{" "}
-      <button
-        onClick={() => {
-          const a = document.createElement("a");
-          a.href = `/api/guilds/${guildId}/download-members?token=${token}`;
-          a.download = `members_${guildId}.csv`;
-          a.click();
-        }}
-        className={styles.downloadButton}
-      >
-        Download addresses
-      </button>
+      />
+      <DownloadButton
+        label="Download addresses"
+        downloadUrl={`/api/guilds/${guildId}/download-members?token=${token}`}
+        filename={`members_${guildId}.csv`}
+      />
       <section className={styles.configSection}>
         <h3>Configurations</h3>
         {configs.length > 0 ? (
