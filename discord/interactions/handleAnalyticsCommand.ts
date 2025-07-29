@@ -30,4 +30,3 @@ export const handleAnalyticsCommand = async (
     console.error("Error handling /analytics command:", error);
   }
 };
-

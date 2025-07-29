@@ -26,6 +26,6 @@ export const DiscordMemberRepository =
 export const NetworkStatusRepository =
   AppDataSource.getRepository(NetworkStatus);
 
-export const DiscordDashboardTokenRepository =
-  AppDataSource.getRepository(DiscordDashboardToken);
-
+export const DiscordDashboardTokenRepository = AppDataSource.getRepository(
+  DiscordDashboardToken
+);

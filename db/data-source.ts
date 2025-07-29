@@ -29,4 +29,3 @@ export const AppDataSource = new DataSource({
   migrationsTableName: "migrations",
   subscribers: [],
 });
-

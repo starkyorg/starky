@@ -1,14 +1,16 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class DropDiscordAnalyticsTokenTable1753378126833 implements MigrationInterface {
-    name = 'DropDiscordAnalyticsTokenTable1753378126833'
+export class DropDiscordAnalyticsTokenTable1753378126833
+  implements MigrationInterface
+{
+  name = "DropDiscordAnalyticsTokenTable1753378126833";
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP TABLE IF EXISTS "discord_analytics_token"`);
-    }
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`DROP TABLE IF EXISTS "discord_analytics_token"`);
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             CREATE TABLE "discord_analytics_token" (
                 "id" SERIAL NOT NULL,
                 "guildId" character varying NOT NULL,
@@ -21,6 +23,5 @@ export class DropDiscordAnalyticsTokenTable1753378126833 implements MigrationInt
                 CONSTRAINT "FK_analytics_discordServerId" FOREIGN KEY ("discordServerId") REFERENCES "discord_server"("id")
             )
         `);
-    }
+  }
 }
-

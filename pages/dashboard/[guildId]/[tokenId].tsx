@@ -33,10 +33,8 @@ interface DashboardPageProps {
 
 const DashboardPage: NextPage<DashboardPageProps> = ({
   configs,
-  guildId,
   discordServerName,
   discordServerIcon,
-  token,
   error,
 }) => {
   if (error == "Invalid or expired token.") {
@@ -67,17 +65,6 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
         discordServerName={discordServerName!}
         discordServerIcon={discordServerIcon}
       />{" "}
-      <button
-        onClick={() => {
-          const a = document.createElement("a");
-          a.href = `/api/guilds/${guildId}/download-members?token=${token}`;
-          a.download = `members_${guildId}.csv`;
-          a.click();
-        }}
-        className={styles.downloadButton}
-      >
-        Download addresses
-      </button>
       <section className={styles.configSection}>
         <h3>Configurations</h3>
         {configs.length > 0 ? (
@@ -187,10 +174,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         starkyModuleType: c.starkyModuleType,
         starkyModuleConfig: c.starkyModuleConfig,
       })),
-      guildId,
       discordServerName,
       discordServerIcon,
-      token: tokenId,
     },
   };
 };
