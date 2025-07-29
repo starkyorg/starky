@@ -2,7 +2,6 @@ import { NextPage, GetServerSideProps } from "next";
 import Logo from "../../../components/Logo";
 import SocialLinks from "../../../components/SocialLinks";
 import styles from "../../../styles/Dashboard.module.scss";
-import { validateDashboardToken } from "../../../utils/validateDashboardToken";
 import RedirectMessage from "../../../components/RedirectMessage"; // optional if you want same UI
 
 import {
@@ -13,6 +12,7 @@ import {
 import { StarkyModuleConfig } from "../../../types/starkyModules";
 import { getDiscordServerInfo } from "../../../discord/utils";
 import Guild from "../../../components/guild/Guild";
+import { validateToken } from "../../../utils/validateToken";
 
 interface Config {
   id: string;
@@ -122,7 +122,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
   // ✅ Step: validate token
-  const isValidToken = await validateDashboardToken(guildId, tokenId);
+  const isValidToken = await validateToken(guildId, tokenId);
 
   if (!isValidToken) {
     if (res) res.statusCode = 403;
