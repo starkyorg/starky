@@ -33,6 +33,8 @@ interface DashboardPageProps {
 
 const DashboardPage: NextPage<DashboardPageProps> = ({
   configs,
+  guildId,
+  token,
   discordServerName,
   discordServerIcon,
   error,
@@ -85,6 +87,20 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
                   <pre className={styles.configValue}>
                     {JSON.stringify(config.starkyModuleConfig, null, 2)}
                   </pre>
+                </div>
+                <div className={styles.configBlock}>
+                  <a
+                    href={`/dashboard/${guildId}/${token}/configs/${config.id}`}
+                    className={styles.downloadButton}
+                    style={{
+                      display: "inline-block",
+                      textDecoration: "none",
+                      fontSize: "0.875rem",
+                      padding: "0.375rem 0.75rem",
+                    }}
+                  >
+                    Edit Configuration
+                  </a>
                 </div>
               </li>
             ))}
@@ -174,6 +190,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         starkyModuleType: c.starkyModuleType,
         starkyModuleConfig: c.starkyModuleConfig,
       })),
+      guildId,
+      token: tokenId,
       discordServerName,
       discordServerIcon,
     },
