@@ -174,10 +174,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         starkyModuleType: c.starkyModuleType,
         starkyModuleConfig: c.starkyModuleConfig,
       })),
-      guildId,
       discordServerName,
       discordServerIcon,
-      token: tokenId,
     },
   };
 };

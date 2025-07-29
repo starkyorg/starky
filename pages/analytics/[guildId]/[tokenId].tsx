@@ -93,7 +93,7 @@ const AnalyticsPage = ({
 
   return (
     <div>
-      <div className={styles.verify}>
+      <div>
         <Logo />
         <h1>Analytics</h1>
       </div>
@@ -208,7 +208,12 @@ export const getServerSideProps = async ({ query }: AnalyticsPageContext) => {
   );
 
   return {
-    props: { userStats: formattedUserStats, guildInfo },
+    props: {
+      userStats: formattedUserStats,
+      guildInfo,
+      token: tokenId,
+      guildId,
+    },
   };
 };
 
