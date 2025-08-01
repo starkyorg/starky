@@ -28,7 +28,7 @@ interface Config {
 interface ConfigEditorPageProps {
   config?: Config;
   guildId: string;
-  token: string;
+  tokenId: string;
   discordServerName: string | null;
   discordServerIcon: string | null;
   error?: string;
@@ -37,7 +37,7 @@ interface ConfigEditorPageProps {
 const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
   config,
   guildId,
-  token,
+  tokenId,
   discordServerName,
   discordServerIcon,
   error,
@@ -118,7 +118,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
     try {
       const response = await axios.put(`/api/configs/${formData.id}`, {
         guildId,
-        token,
+        token: tokenId,
         starknetNetwork: formData.starknetNetwork,
         discordRoleId: formData.discordRoleId,
         starkyModuleType: formData.starkyModuleType,
@@ -127,7 +127,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
 
       setSubmitSuccess(true);
       setTimeout(() => {
-        router.push(`/dashboard/${guildId}/${token}`);
+        router.push(`/dashboard/${guildId}/${tokenId}`);
       }, 2000);
     } catch (error: any) {
       setSubmitError(
@@ -283,7 +283,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
             
             <button
               type="button"
-              onClick={() => router.push(`/dashboard/${guildId}/${token}`)}
+              onClick={() => router.push(`/dashboard/${guildId}/${tokenId}`)}
               style={{
                 marginLeft: "1rem",
                 padding: "0.5rem 1rem",
@@ -339,13 +339,13 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
 export const getServerSideProps: GetServerSideProps = async ({ query, res }) => {
   await setupDb();
 
-  const { guildId, token, configId } = query;
+  const { guildId, tokenId, configId } = query;
 
   if (
     !guildId ||
     typeof guildId !== "string" ||
-    !token ||
-    typeof token !== "string" ||
+    !tokenId ||
+    typeof tokenId !== "string" ||
     !configId ||
     typeof configId !== "string"
   ) {
@@ -353,21 +353,21 @@ export const getServerSideProps: GetServerSideProps = async ({ query, res }) => 
     return {
       props: {
         guildId: "",
-        token: "",
+        tokenId: "",
         error: "Missing or invalid guild ID, token, or config ID.",
       },
     };
   }
 
   // Validate token
-  const isValidToken = await validateToken(guildId, token);
+  const isValidToken = await validateToken(guildId, tokenId);
 
   if (!isValidToken) {
     if (res) res.statusCode = 403;
     return {
       props: {
         guildId,
-        token,
+        tokenId,
         error: "Invalid or expired token.",
       },
     };
@@ -382,7 +382,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, res }) => 
     return {
       props: {
         guildId,
-        token,
+        tokenId,
         error: "Guild not found.",
       },
     };
@@ -399,7 +399,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, res }) => 
     return {
       props: {
         guildId,
-        token,
+        tokenId,
         error: "Configuration not found.",
       },
     };
@@ -429,7 +429,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, res }) => 
         starkyModuleConfig: config.starkyModuleConfig,
       },
       guildId,
-      token,
+      tokenId,
       discordServerName,
       discordServerIcon,
     },

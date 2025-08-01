@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { setupDb, DiscordServerConfigRepository } from "../../../db";
+import { DiscordServerConfigRepository } from "../../../db";
 import { validateToken } from "../../../utils/validateToken";
 import starkyModules from "../../../starkyModules";
 import { NetworkName } from "../../../types/networks";
@@ -11,8 +11,6 @@ type Data = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  await setupDb();
-
   const { configId } = req.query;
   const { guildId, token } = req.body;
 
