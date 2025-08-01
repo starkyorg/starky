@@ -1,11 +1,11 @@
-import { DiscordAnalyticsTokenRepository } from "../db";
+import { DiscordDashboardTokenRepository } from "../db";
 
 export const validateToken = async (
   guildId: string,
   tokenId: string
 ): Promise<boolean> => {
   try {
-    const token = await DiscordAnalyticsTokenRepository.findOne({
+    const token = await DiscordDashboardTokenRepository.findOne({
       where: { guildId, token: tokenId },
     });
 
@@ -13,7 +13,7 @@ export const validateToken = async (
 
     // Check if token is expired
     if (new Date() > new Date(token.expiresAt)) {
-      await DiscordAnalyticsTokenRepository.delete({ guildId, token: tokenId }); // Remove expired token
+      await DiscordDashboardTokenRepository.delete({ guildId, token: tokenId }); // Remove expired token
       return false;
     }
 

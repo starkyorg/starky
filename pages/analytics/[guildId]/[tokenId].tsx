@@ -37,6 +37,8 @@ interface AnalyticsPageProps {
   userStats: Record<string, number>;
   tokenExpired?: boolean;
   serverNotFound?: boolean;
+  token: string;
+  guildId: string;
   guildInfo?: {
     name: string;
     icon: string | null;
@@ -56,6 +58,8 @@ const AnalyticsPage = ({
   tokenExpired,
   serverNotFound,
   guildInfo,
+  guildId,
+  token,
 }: AnalyticsPageProps) => {
   if (tokenExpired) {
     return (
@@ -89,8 +93,9 @@ const AnalyticsPage = ({
 
   return (
     <div>
-      <div className={styles.verify}>
+      <div>
         <Logo />
+        <h1>Analytics</h1>
       </div>
       <div className={styles.serverInfo}>
         <span>Server Analytics for Guild:</span>
@@ -101,6 +106,17 @@ const AnalyticsPage = ({
           />
         </span>
       </div>
+      <button
+        onClick={() => {
+          const a = document.createElement("a");
+          a.href = `/api/guilds/${guildId}/download-members?token=${token}`;
+          a.download = `members_${guildId}.csv`;
+          a.click();
+        }}
+        className={styles.downloadButton}
+      >
+        Download addresses
+      </button>
 
       <div className={styles.sectionHeading}>
         <b>Distribution of networks among connected wallets:</b>
@@ -192,7 +208,12 @@ export const getServerSideProps = async ({ query }: AnalyticsPageContext) => {
   );
 
   return {
-    props: { userStats: formattedUserStats, guildInfo },
+    props: {
+      userStats: formattedUserStats,
+      guildInfo,
+      token: tokenId,
+      guildId,
+    },
   };
 };
 

@@ -39,7 +39,7 @@
 }
 
 .description {
-  color: #666;
+  color: #8b7355; 
   
   @media (max-width: 768px) {
     font-size: 0.95rem;
@@ -48,19 +48,29 @@
 
 /* Example Card styles */
 .card {
-  border: 1px solid #e5e5e5;
+  border: 1px solid #e8dcc6; 
   border-radius: 0.5rem;
   overflow: hidden;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: #faf9f5; 
+  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.08); 
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.12);
+    border-color: #d4c4a8;
+  }
 }
 
 .cardHeader {
   padding: 1.25rem 1.25rem 0.75rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0e6d2; 
+  background: linear-gradient(135deg, #fdfcf7 0%, #f8f5ef 100%); 
 }
 
 .cardTitle {
+  color: #2d2d2d; 
+  
   @media (max-width: 768px) {
     font-size: 1.25rem;
   }
@@ -68,7 +78,7 @@
 
 .cardDescription {
   font-size: 0.875rem;
-  color: #666;
+  color: #8b7355; 
 }
 
 .cardContent {
@@ -81,17 +91,19 @@
 
 .explanation {
   font-size: 0.875rem;
-  color: #666;
+  color: #8b7355; 
   margin-bottom: 1rem;
+  line-height: 1.5;
 }
 
 /* Code Block styles */
 .codeContainer {
   position: relative;
-  background-color: #f5f5f5;
+  background-color: #f5f1e8; 
   padding: 1rem;
   border-radius: 0.375rem;
   overflow-x: auto;
+  border: 1px solid #e8dcc6; 
   
   @media (max-width: 480px) {
     padding: 0.75rem;
@@ -99,9 +111,10 @@
 }
 
 .code {
-  font-family: monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
   font-size: 0.875rem;
   white-space: pre;
+  color: #2d2d2d; 
   
   @media (max-width: 768px) {
     font-size: 0.8rem;
@@ -123,10 +136,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #8b7355; 
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    border-radius: 0.25rem;
+    background-color: #ede4d3;
+    color: #2d2d2d;
+  }
+
+  &:active {
+    background-color: #e0d2bb;
   }
 }
 
@@ -136,6 +156,8 @@
 }
 
 .componentsTitle {
+  color: #2d2d2d;
+  
   @media (max-width: 768px) {
     font-size: 1.1rem;
   }
@@ -145,7 +167,7 @@
   list-style-type: disc;
   padding-left: 1.25rem;
   font-size: 0.875rem;
-  color: #666;
+  color: #8b7355; 
   
   @media (max-width: 480px) {
     padding-left: 1rem;
@@ -162,7 +184,7 @@
 
 .componentName {
   font-weight: 500;
-  color: #333;
+  color: #2d2d2d; 
 }
 
 /* Implementation Notes styles */
@@ -176,6 +198,7 @@
 
 .notesTitle {
   margin-bottom: 1rem;
+  color: #2d2d2d; 
   
   @media (max-width: 768px) {
     font-size: 1.25rem;
@@ -184,11 +207,11 @@
 }
 
 .notesContainer {
-  border: 1px solid #e5e5e5;
+  border: 1px solid #e8dcc6; 
   border-radius: 0.5rem;
   padding: 1.5rem;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background-color: #faf9f5; 
+  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.08); 
   
   @media (max-width: 768px) {
     padding: 1.25rem;
@@ -203,7 +226,7 @@
   font-size: 0.875rem;
   list-style-type: disc;
   padding-left: 1.25rem;
-  color: #666;
+  color: #8b7355; 
   
   @media (max-width: 768px) {
     line-height: 1.4;
@@ -229,5 +252,5 @@
 
 .notesItemTitle {
   font-weight: 500;
-  color: #333;
+  color: #2d2d2d; 
 }

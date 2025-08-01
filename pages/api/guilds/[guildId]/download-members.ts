@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { setupDb, DiscordMemberRepository } from "../../../../db";
-import { validateDashboardToken } from "../../../../utils/validateDashboardToken";
+import { validateToken } from "../../../../utils/validateToken";
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,7 +19,7 @@ export default async function handler(
     return;
   }
 
-  const isValidToken = await validateDashboardToken(guildId, token);
+  const isValidToken = await validateToken(guildId, token);
   if (!isValidToken) {
     res.status(403).json({ error: "Invalid or expired token" });
     return;
