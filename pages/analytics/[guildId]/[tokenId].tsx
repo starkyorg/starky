@@ -13,6 +13,7 @@ import Logo from "../../../components/Logo";
 import RedirectMessage from "../../../components/RedirectMessage";
 import SocialLinks from "../../../components/SocialLinks";
 import Guild from "../../../components/guild/Guild";
+import DownloadButton from "../../../components/DownloadButton";
 import {
   DiscordMemberRepository,
   DiscordServerRepository,
@@ -106,17 +107,11 @@ const AnalyticsPage = ({
           />
         </span>
       </div>
-      <button
-        onClick={() => {
-          const a = document.createElement("a");
-          a.href = `/api/guilds/${guildId}/download-members?token=${token}`;
-          a.download = `members_${guildId}.csv`;
-          a.click();
-        }}
-        className={styles.downloadButton}
-      >
-        Download addresses
-      </button>
+      <DownloadButton
+        label="Download addresses"
+        downloadUrl={`/api/guilds/${guildId}/download-members?token=${token}`}
+        filename={`members_${guildId}.csv`}
+      />
 
       <div className={styles.sectionHeading}>
         <b>Distribution of networks among connected wallets:</b>

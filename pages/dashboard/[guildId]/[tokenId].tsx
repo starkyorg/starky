@@ -36,6 +36,8 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
   configs,
   discordServerName,
   discordServerIcon,
+  guildId,
+  token,
   error,
 }) => {
   if (error == "Invalid or expired token.") {
@@ -180,6 +182,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         starkyModuleType: c.starkyModuleType,
         starkyModuleConfig: c.starkyModuleConfig,
       })),
+      guildId,
+      token: tokenId,
       discordServerName,
       discordServerIcon,
     },
