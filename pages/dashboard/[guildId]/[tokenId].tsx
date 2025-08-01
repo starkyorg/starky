@@ -3,6 +3,7 @@ import Logo from "../../../components/Logo";
 import SocialLinks from "../../../components/SocialLinks";
 import styles from "../../../styles/Dashboard.module.scss";
 import RedirectMessage from "../../../components/RedirectMessage"; // optional if you want same UI
+import DownloadButton from "../../../components/DownloadButton";
 
 import {
   setupDb,
@@ -35,6 +36,8 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
   configs,
   discordServerName,
   discordServerIcon,
+  guildId,
+  token,
   error,
 }) => {
   if (error == "Invalid or expired token.") {
@@ -64,7 +67,12 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
       <Guild
         discordServerName={discordServerName!}
         discordServerIcon={discordServerIcon}
-      />{" "}
+      />
+      <DownloadButton
+        label="Download addresses"
+        downloadUrl={`/api/guilds/${guildId}/download-members?token=${token}`}
+        filename={`members_${guildId}.csv`}
+      />
       <section className={styles.configSection}>
         <h3>Configurations</h3>
         {configs.length > 0 ? (
@@ -174,6 +182,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         starkyModuleType: c.starkyModuleType,
         starkyModuleConfig: c.starkyModuleConfig,
       })),
+      guildId,
+      token: tokenId,
       discordServerName,
       discordServerIcon,
     },
