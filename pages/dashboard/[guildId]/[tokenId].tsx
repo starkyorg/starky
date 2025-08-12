@@ -64,7 +64,7 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
       <Guild
         discordServerName={discordServerName!}
         discordServerIcon={discordServerIcon}
-      />{" "}
+      />
       <section className={styles.configSection}>
         <h3>Configurations</h3>
         {configs.length > 0 ? (
