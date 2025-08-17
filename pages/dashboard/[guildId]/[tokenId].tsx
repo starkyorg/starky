@@ -91,13 +91,7 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
                 <div className={styles.configBlock}>
                   <a
                     href={`/dashboard/${guildId}/${token}/configs/${config.id}`}
-                    className={styles.downloadButton}
-                    style={{
-                      display: "inline-block",
-                      textDecoration: "none",
-                      fontSize: "0.875rem",
-                      padding: "0.375rem 0.75rem",
-                    }}
+                    className={styles.editButton}
                   >
                     Edit Configuration
                   </a>

@@ -278,15 +278,11 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
           )}
 
           {/* Submit Button */}
-          <div>
+          <div className={styles.buttonGroup}>
             <button
               type="submit"
               disabled={isSubmitting}
-              className={styles.downloadButton}
-              style={{
-                backgroundColor: isSubmitting ? "#9ca3af" : "#5865f2",
-                cursor: isSubmitting ? "not-allowed" : "pointer",
-              }}
+              className={styles.primaryButton}
             >
               {isSubmitting ? "Updating..." : "Update Configuration"}
             </button>
@@ -294,49 +290,21 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
             <button
               type="button"
               onClick={() => router.push(`/dashboard/${guildId}/${tokenId}`)}
-              style={{
-                marginLeft: "1rem",
-                padding: "0.5rem 1rem",
-                backgroundColor: "#6b7280",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
+              className={styles.secondaryButton}
             >
-              Cancel
+              {submitSuccess ? "Close" : "Cancel"}
             </button>
           </div>
 
           {/* Success/Error Messages */}
           {submitSuccess && (
-            <div
-              style={{
-                marginTop: "1rem",
-                padding: "0.75rem",
-                backgroundColor: "#d1fae5",
-                border: "1px solid #10b981",
-                borderRadius: "0.5rem",
-                color: "#065f46",
-              }}
-            >
+            <div className={styles.successMessage}>
               ✅ Configuration updated successfully!
             </div>
           )}
 
           {submitError && (
-            <div
-              style={{
-                marginTop: "1rem",
-                padding: "0.75rem",
-                backgroundColor: "#fee2e2",
-                border: "1px solid #ef4444",
-                borderRadius: "0.5rem",
-                color: "#dc2626",
-              }}
-            >
-              ❌ {submitError}
-            </div>
+            <div className={styles.errorMessage}>❌ {submitError}</div>
           )}
         </form>
       </section>
