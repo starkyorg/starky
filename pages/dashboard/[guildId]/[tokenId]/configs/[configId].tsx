@@ -88,7 +88,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => {
       if (!prev) return null;
-      
+
       if (field.startsWith("moduleConfig.")) {
         const configField = field.replace("moduleConfig.", "");
         return {
@@ -99,7 +99,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
           },
         };
       }
-      
+
       return {
         ...prev,
         [field]: value,
@@ -116,7 +116,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
     setSubmitSuccess(false);
 
     try {
-      const response = await axios.put(`/api/configs/${formData.id}`, {
+      await axios.put(`/api/configs/${formData.id}`, {
         guildId,
         token: tokenId,
         starknetNetwork: formData.starknetNetwork,
@@ -126,12 +126,10 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
       });
 
       setSubmitSuccess(true);
-      setTimeout(() => {
-        router.push(`/dashboard/${guildId}/${tokenId}`);
-      }, 2000);
     } catch (error: any) {
       setSubmitError(
-        error.response?.data?.error || "An error occurred while updating the configuration"
+        error.response?.data?.error ||
+          "An error occurred while updating the configuration"
       );
     } finally {
       setIsSubmitting(false);
@@ -157,7 +155,9 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
               <strong>Starknet Network:</strong>
               <select
                 value={formData.starknetNetwork}
-                onChange={(e) => handleInputChange("starknetNetwork", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("starknetNetwork", e.target.value)
+                }
                 style={{
                   marginLeft: "0.5rem",
                   padding: "0.5rem",
@@ -181,7 +181,9 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
               <input
                 type="text"
                 value={formData.discordRoleId}
-                onChange={(e) => handleInputChange("discordRoleId", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("discordRoleId", e.target.value)
+                }
                 style={{
                   marginLeft: "0.5rem",
                   padding: "0.5rem",
@@ -200,7 +202,9 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
               <strong>Starky Module Type:</strong>
               <select
                 value={formData.starkyModuleType}
-                onChange={(e) => handleInputChange("starkyModuleType", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("starkyModuleType", e.target.value)
+                }
                 style={{
                   marginLeft: "0.5rem",
                   padding: "0.5rem",
@@ -229,7 +233,10 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
                       <textarea
                         value={formData.starkyModuleConfig[field.id] || ""}
                         onChange={(e) =>
-                          handleInputChange(`moduleConfig.${field.id}`, e.target.value)
+                          handleInputChange(
+                            `moduleConfig.${field.id}`,
+                            e.target.value
+                          )
                         }
                         placeholder={field.placeholder}
                         style={{
@@ -248,7 +255,10 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
                         type="text"
                         value={formData.starkyModuleConfig[field.id] || ""}
                         onChange={(e) =>
-                          handleInputChange(`moduleConfig.${field.id}`, e.target.value)
+                          handleInputChange(
+                            `moduleConfig.${field.id}`,
+                            e.target.value
+                          )
                         }
                         placeholder={field.placeholder}
                         style={{
@@ -268,7 +278,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
           )}
 
           {/* Submit Button */}
-          <div style={{ marginTop: "2rem" }}>
+          <div>
             <button
               type="submit"
               disabled={isSubmitting}
@@ -280,7 +290,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
             >
               {isSubmitting ? "Updating..." : "Update Configuration"}
             </button>
-            
+
             <button
               type="button"
               onClick={() => router.push(`/dashboard/${guildId}/${tokenId}`)}
@@ -310,7 +320,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
                 color: "#065f46",
               }}
             >
-              ✅ Configuration updated successfully! Redirecting to dashboard...
+              ✅ Configuration updated successfully!
             </div>
           )}
 
@@ -336,7 +346,10 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+  res,
+}) => {
   await setupDb();
 
   const { guildId, tokenId, configId } = query;
@@ -436,4 +449,4 @@ export const getServerSideProps: GetServerSideProps = async ({ query, res }) => 
   };
 };
 
-export default ConfigEditorPage; 
+export default ConfigEditorPage;

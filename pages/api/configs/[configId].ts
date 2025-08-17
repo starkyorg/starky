@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { DiscordServerConfigRepository } from "../../../db";
+import { DiscordServerConfigRepository, setupDb } from "../../../db";
 import { validateToken } from "../../../utils/validateToken";
 import starkyModules from "../../../starkyModules";
 import { NetworkName } from "../../../types/networks";
@@ -11,6 +11,7 @@ type Data = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  await setupDb();
   const { configId } = req.query;
   const { guildId, token } = req.body;
 
@@ -66,6 +67,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     // Validate token
     const isValidToken = await validateToken(guildId, token);
+    console.log("isValidToken", isValidToken);
     if (!isValidToken) {
       res.status(403).json({
         message: "Invalid or expired token",
@@ -74,7 +76,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       return;
     }
 
-    const { starknetNetwork, discordRoleId, starkyModuleType, starkyModuleConfig } = req.body;
+    const {
+      starknetNetwork,
+      discordRoleId,
+      starkyModuleType,
+      starkyModuleConfig,
+    } = req.body;
 
     if (!starknetNetwork || !discordRoleId || !starkyModuleType) {
       res.status(400).json({
@@ -150,4 +157,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   }
 };
 
-export default handler; 
+export default handler;
