@@ -31,4 +31,4 @@ const DownloadButton: FunctionComponent<DownloadButtonProps> = ({
   );
 };
 
-export default DownloadButton; 
+export default DownloadButton;
