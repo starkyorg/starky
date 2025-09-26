@@ -6,7 +6,7 @@ type DiscordServerInfoProps = {
   discordServerName: string;
   discordServerIcon?: string | null;
   network: string;
-  networkType: "ethereum" | "starknet";
+  networkType: "ethereum" | "starknet" | "stellar";
 };
 
 const DiscordServerInfo = ({
@@ -18,11 +18,13 @@ const DiscordServerInfo = ({
   const networkIcons = {
     ethereum: "/assets/ethereum-icon.png",
     starknet: "/assets/starknet-icon.png",
+    stellar: "/assets/stellar-icon.png",
   };
 
   const networkLabels = {
     ethereum: "Ethereum network:",
     starknet: "Starknet network:",
+    stellar: "Stellar network:",
   };
 
   return (

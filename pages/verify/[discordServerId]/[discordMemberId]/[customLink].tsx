@@ -10,11 +10,13 @@ import SocialLinks from "../../../../components/SocialLinks";
 import chainAliasByNetwork from "../../../../configs/chainAliasByNetwork.json";
 import { DiscordMemberRepository, setupDb } from "../../../../db";
 import { getDiscordServerInfo } from "../../../../discord/utils";
-import { StarknetNetworkName } from "../../../../types/networks";
+import { StarknetNetworkName, NetworkName } from "../../../../types/networks";
 import messageToSign from "../../../../utils/starknet/message";
 import WatchTowerLogger from "../../../../watchTower";
 import DiscordServerInfo from "../../../../components/verification/DiscordServerInfo";
 import WalletInfo from "../../../../components/verification/WalletInfo";
+import DynamicVerificationRouter from "../../../../components/verification/DynamicVerificationRouter";
+import { getChainType } from "../../../../utils/networkDetection";
 
 import styles from "../../../../styles/Verify.module.scss";
 
@@ -22,6 +24,7 @@ type Props = {
   discordServerName: string;
   discordServerIcon?: string | null;
   starknetNetwork: StarknetNetworkName;
+  network: NetworkName;
 };
 
 const getSignatureErrorMessage = (
@@ -60,9 +63,12 @@ const VerifyPage = ({
   discordServerName,
   discordServerIcon,
   starknetNetwork,
+  network,
 }: Props) => {
   const router = useRouter();
   const { discordServerId, discordMemberId, customLink } = router.query;
+
+  // Initialize all hooks first (before any conditional returns)
   const [account, setAccount] = useState<any>(undefined);
   const [noStarknetWallet, setNotStarknetWallet] = useState<boolean>(false);
   const [wrongStarknetNetwork, setWrongStarknetNetwork] =
@@ -231,6 +237,19 @@ const VerifyPage = ({
       WatchTowerLogger.error(e.message, e);
     }
   }, [account, verifySignature, chainId]);
+
+  // Check if this is not a Starknet network and route to appropriate page
+  const chainType = getChainType(network);
+  if (chainType && chainType !== "starknet") {
+    return (
+      <DynamicVerificationRouter
+        network={network}
+        discordServerId={discordServerId as string}
+        discordMemberId={discordMemberId as string}
+        customLink={customLink as string}
+      />
+    );
+  }
 
   let starknetWalletDiv = (
     <div>
@@ -409,6 +428,7 @@ export async function getServerSideProps({ res, query }: any) {
       discordServerName,
       discordServerIcon,
       starknetNetwork: discordMember.starknetNetwork,
+      network: discordMember.starknetNetwork, // For backward compatibility
     },
   };
 }

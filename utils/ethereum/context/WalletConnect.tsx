@@ -9,6 +9,8 @@ import {
   disconnect as starknetDisconnect,
 } from "starknetkit";
 import { INFURA_PROJECT_ID, ETHEREUM_ENABLED } from "../ethereumEnv";
+import { useStellarWallet } from "../../stellar/context/StellarWalletConnect";
+import { ChainType } from "../../../types/networks";
 
 type WalletContextType = {
   connect: (networkName: string) => Promise<void>;
@@ -16,7 +18,7 @@ type WalletContextType = {
   account: string | null;
   provider: ethers.BrowserProvider | null;
   chainId: number | string | null;
-  networkType: "ethereum" | "starknet" | null;
+  networkType: ChainType | null;
   signMessage: (message: string) => Promise<string>;
   balance: string | null;
 };
@@ -27,9 +29,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [account, setAccount] = useState<string | null>(null);
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [chainId, setChainId] = useState<number | string | null>(null);
-  const [networkType, setNetworkType] = useState<
-    "ethereum" | "starknet" | null
-  >(null);
+  const [networkType, setNetworkType] = useState<ChainType | null>(null);
   const [wcProvider, setWcProvider] = useState<any>(null);
   const [balance, setBalance] = useState<string | null>(null);
 
@@ -38,7 +38,11 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     if (!network) throw new Error("Network not supported");
 
     try {
-      if (networkName === "ethereum-mainnet" && ETHEREUM_ENABLED) {
+      // Check if it's a Stellar network
+      if (network.chain === "stellar") {
+        // Note: This will be handled by StellarWalletProvider separately
+        throw new Error("Use StellarWalletProvider for Stellar networks");
+      } else if (networkName === "ethereum-mainnet" && ETHEREUM_ENABLED) {
         //connect to Metamask or any injected extension
         if (typeof window !== "undefined" && (window as any).ethereum) {
           const ethersProvider = new ethers.BrowserProvider(

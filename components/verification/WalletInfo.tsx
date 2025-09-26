@@ -4,10 +4,11 @@ import { truncateAddress } from "../../utils/truncateAddess";
 
 type EthereumAccount = string;
 type StarknetAccount = { address: string };
+type StellarAccount = string;
 
 type WalletInfoProps = {
-  account: EthereumAccount | StarknetAccount | null;
-  networkType: "ethereum" | "starknet";
+  account: EthereumAccount | StarknetAccount | StellarAccount | null;
+  networkType: "ethereum" | "starknet" | "stellar";
   balance?: string | null;
   onDisconnect: () => void;
   verifiedSignature?: boolean;
@@ -42,6 +43,8 @@ const WalletInfo = ({
   const getAddress = () => {
     if (networkType === "ethereum") {
       return account as EthereumAccount;
+    } else if (networkType === "stellar") {
+      return account as StellarAccount;
     } else {
       return (account as StarknetAccount).address;
     }
@@ -51,13 +54,23 @@ const WalletInfo = ({
 
   return (
     <span className={styles.starknetWallet}>
-      {networkType === "ethereum" ? "Ethereum wallet" : "Starknet wallet"}:{" "}
-      <b>{isMobile ? truncateAddress(address) : address}</b>{" "}
+      {networkType === "ethereum"
+        ? "Ethereum wallet"
+        : networkType === "stellar"
+        ? "Stellar wallet"
+        : "Starknet wallet"}
+      : <b>{isMobile ? truncateAddress(address) : address}</b>{" "}
       {!verifiedSignature && <a onClick={onDisconnect}>disconnect</a>}
       {networkType === "ethereum" && balance && (
         <>
           <br />
           Balance: <b>{balance ? `${balance} ETH` : "Loading..."}</b>
+        </>
+      )}
+      {networkType === "stellar" && balance && (
+        <>
+          <br />
+          Balance: <b>{balance ? `${balance} XLM` : "Loading..."}</b>
         </>
       )}
     </span>
