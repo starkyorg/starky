@@ -3,9 +3,10 @@
     "label": "Starknet Mainnet",
     "name": "mainnet",
     "url": "https://starknet.preview.apibara.org",
-    "indexer": true,
+    "indexer": false,
     "description": "The Starknet mainnet",
-    "verifyPage": "verify"
+    "verifyPage": "verify",
+    "chain": "starknet"
   },
   {
     "label": "Starknet Sepolia",
@@ -13,7 +14,8 @@
     "url": "coming-soon",
     "indexer": false,
     "description": "The Starknet testnet",
-    "verifyPage": "verify"
+    "verifyPage": "verify",
+    "chain": "starknet"
   },
   {
     "label": "Ethereum Mainnet",
@@ -24,6 +26,29 @@
     "currency": "ETH",
     "indexer": false,
     "description": "The Ethereum mainnet",
-    "verifyPage": "verify-eth"
+    "verifyPage": "verify-eth",
+    "chain": "ethereum"
+  },
+  {
+    "label": "Stellar Mainnet",
+    "name": "stellar-mainnet",
+    "url": "https://horizon.stellar.org",
+    "explorerUrl": "https://stellarchain.io",
+    "currency": "XLM",
+    "indexer": false,
+    "description": "The Stellar mainnet",
+    "verifyPage": "verify-stellar",
+    "chain": "stellar"
+  },
+  {
+    "label": "Stellar Testnet",
+    "name": "stellar-testnet",
+    "url": "https://horizon-testnet.stellar.org",
+    "explorerUrl": "https://testnet.stellarchain.io",
+    "currency": "XLM",
+    "indexer": false,
+    "description": "The Stellar testnet",
+    "verifyPage": "verify-stellar",
+    "chain": "stellar"
   }
 ]
