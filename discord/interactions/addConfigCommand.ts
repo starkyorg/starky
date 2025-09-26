@@ -145,17 +145,38 @@ const handleBackToModule = async (
 ) => {
   const currentConfig = ongoingConfigurationsCache[interaction.guildId!];
   const network = currentConfig?.network;
-  
+
   const modulesOptions: SelectMenuComponentOptionData[] = [];
   for (const starkyModuleId in starkyModules) {
     const starkyModule = starkyModules[starkyModuleId];
     // Only show modules that support the selected network
-    if (network && starkyModule.networks && starkyModule.networks.includes(network)) {
+    if (
+      network &&
+      starkyModule.networks &&
+      starkyModule.networks.includes(network)
+    ) {
+      // Validate label length (Discord requires 1-25 characters)
+      let label = starkyModule.name || starkyModuleId;
+      if (label.length > 25) {
+        label = label.substring(0, 22) + "...";
+      }
+      if (label.length === 0) {
+        label = starkyModuleId.substring(0, 25);
+      }
+
       modulesOptions.push({
-        label: starkyModule.name,
+        label: label,
         value: starkyModuleId,
       });
     }
+  }
+
+  if (modulesOptions.length === 0) {
+    await interaction.update({
+      content: `❌ No Starky modules are available for the network "${network}". Please go back and select a different network.`,
+      components: [addBackButton("module")],
+    });
+    return;
   }
 
   const selectRow =
@@ -466,11 +487,29 @@ export const handleNetworkConfigCommand = async (
     const starkyModule = starkyModules[starkyModuleId];
     // Only show modules that support the selected network
     if (starkyModule.networks && starkyModule.networks.includes(network)) {
+      // Validate label length (Discord requires 1-25 characters)
+      let label = starkyModule.name || starkyModuleId;
+      if (label.length > 25) {
+        label = label.substring(0, 22) + "...";
+      }
+      if (label.length === 0) {
+        label = starkyModuleId.substring(0, 25);
+      }
+
       modulesOptions.push({
-        label: starkyModule.name,
+        label: label,
         value: starkyModuleId,
       });
     }
+  }
+
+  if (modulesOptions.length === 0) {
+    await interaction.followUp({
+      content: `❌ No Starky modules are available for the network "${network}". Please go back and select a different network.`,
+      components: [addBackButton(CONFIG_STEPS.MODULE)],
+      ephemeral: true,
+    });
+    return;
   }
 
   const selectRow =
