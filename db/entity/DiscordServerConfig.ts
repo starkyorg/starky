@@ -16,7 +16,13 @@ export class DiscordServerConfig {
   discordServerId: string;
 
   @Column()
-  starknetNetwork: "goerli" | "mainnet" | "sepolia" | "ethereum-mainnet";
+  starknetNetwork:
+    | "goerli"
+    | "mainnet"
+    | "sepolia"
+    | "ethereum-mainnet"
+    | "stellar-mainnet"
+    | "stellar-testnet";
 
   @Column()
   discordRoleId: string;

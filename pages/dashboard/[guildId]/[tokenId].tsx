@@ -13,6 +13,7 @@ import { StarkyModuleConfig } from "../../../types/starkyModules";
 import { getDiscordServerInfo } from "../../../discord/utils";
 import Guild from "../../../components/guild/Guild";
 import { validateToken } from "../../../utils/validateToken";
+import Link from "next/link";
 
 interface Config {
   id: string;
@@ -67,6 +68,16 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
         discordServerName={discordServerName!}
         discordServerIcon={discordServerIcon}
       />
+
+      <section className={styles.configSection}>
+        <h3>Analytics</h3>
+        <div className={styles.buttonGroup}>
+          <Link href={`/analytics/${guildId}/${token}`}>
+            <button className={styles.primaryButton}>View Analytics</button>
+          </Link>
+        </div>
+      </section>
+
       <section className={styles.configSection}>
         <h3>Configurations</h3>
         {configs.length > 0 ? (
