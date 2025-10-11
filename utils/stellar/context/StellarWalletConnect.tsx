@@ -12,7 +12,6 @@ import networks from "../../../configs/networks.json";
 import {
   getStellarHorizonUrl,
   getStellarNetworkPassphrase,
-  STELLAR_ENABLED,
 } from "../stellarEnv";
 import WatchTowerLogger from "../../../watchTower";
 
@@ -20,7 +19,7 @@ type StellarWalletContextType = {
   connect: (networkName: string) => Promise<void>;
   disconnect: () => void;
   account: string | null;
-  networkType: "stellar" | null;
+  networkType: "stellar-mainnet" | "stellar-testnet" | null;
   signMessage: (message: string) => Promise<string>;
   balance: string | null;
   server: StellarSdk.Horizon.Server | null;
@@ -36,23 +35,19 @@ export function StellarWalletProvider({
   children: React.ReactNode;
 }) {
   const [account, setAccount] = useState<string | null>(null);
-  const [networkType, setNetworkType] = useState<"stellar" | null>(null);
+  const [networkType, setNetworkType] = useState<
+    "stellar-mainnet" | "stellar-testnet" | null
+  >(null);
   const [balance, setBalance] = useState<string | null>(null);
   const [server, setServer] = useState<StellarSdk.Horizon.Server | null>(null);
 
   const connect = async (networkName: string) => {
     console.log("Attempting to connect to Stellar network:", networkName);
-    console.log("STELLAR_ENABLED:", STELLAR_ENABLED);
 
     const network = networks.find((n) => n.name === networkName);
     if (!network || network.chain !== "stellar") {
       console.error("Invalid network:", network);
       throw new Error("Invalid Stellar network");
-    }
-
-    if (!STELLAR_ENABLED) {
-      console.error("Stellar features are disabled");
-      throw new Error("Stellar features are disabled");
     }
 
     try {
@@ -107,7 +102,7 @@ export function StellarWalletProvider({
       }
 
       setAccount(publicKey);
-      setNetworkType("stellar");
+      setNetworkType(networkName as "stellar-mainnet" | "stellar-testnet");
       setServer(stellarServer);
     } catch (error) {
       console.error("Stellar connection error:", error);
@@ -135,9 +130,7 @@ export function StellarWalletProvider({
 
       const transaction = new StellarSdk.TransactionBuilder(sourceAccount, {
         fee: StellarSdk.BASE_FEE,
-        networkPassphrase: getStellarNetworkPassphrase(
-          networkType === "stellar" ? "stellar-testnet" : "stellar-mainnet"
-        ),
+        networkPassphrase: getStellarNetworkPassphrase(networkType!),
       })
         .addMemo(StellarSdk.Memo.text(message.substring(0, 28))) // Stellar memo limit is 28 chars
         .addOperation(
@@ -154,9 +147,7 @@ export function StellarWalletProvider({
 
       // Sign the transaction using Freighter
       const signedTxResult = await signTransaction(xdr, {
-        networkPassphrase: getStellarNetworkPassphrase(
-          networkType === "stellar" ? "stellar-testnet" : "stellar-mainnet"
-        ),
+        networkPassphrase: getStellarNetworkPassphrase(networkType!),
         address: account,
       });
 

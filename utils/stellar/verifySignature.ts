@@ -1,5 +1,8 @@
 import * as StellarSdk from "stellar-sdk";
-import { getStellarHorizonUrl } from "./stellarEnv";
+import {
+  getStellarHorizonUrl,
+  getStellarNetworkPassphrase,
+} from "./stellarEnv";
 
 export const verifySignature = async (
   publicKey: string,
@@ -45,9 +48,12 @@ export const verifySignature = async (
 
     try {
       // Parse the signed transaction XDR
+      const networkPassphrase = getStellarNetworkPassphrase(
+        network as "stellar-mainnet" | "stellar-testnet"
+      );
       const transaction = StellarSdk.TransactionBuilder.fromXDR(
         signedTxXdr,
-        StellarSdk.Networks.TESTNET // or StellarSdk.Networks.PUBLIC for mainnet
+        networkPassphrase
       );
 
       console.log("Parsed transaction:", transaction);
