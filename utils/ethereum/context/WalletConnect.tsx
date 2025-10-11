@@ -37,7 +37,11 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     if (!network) throw new Error("Network not supported");
 
     try {
-      if (networkName === "ethereum-mainnet" && ETHEREUM_ENABLED) {
+      // Check if it's a Stellar network
+      if (network.chain === "stellar") {
+        // Note: This will be handled by StellarWalletProvider separately
+        throw new Error("Use StellarWalletProvider for Stellar networks");
+      } else if (networkName === "ethereum-mainnet" && ETHEREUM_ENABLED) {
         //connect to Metamask or any injected extension
         if (typeof window !== "undefined" && (window as any).ethereum) {
           const ethersProvider = new ethers.BrowserProvider(

@@ -73,6 +73,12 @@ const WalletInfo = ({
           Balance: <b>{balance ? `${balance} XLM` : "Loading..."}</b>
         </div>
       )}
+      {networkType === "stellar" && balance && (
+        <>
+          <br />
+          Balance: <b>{balance ? `${balance} XLM` : "Loading..."}</b>
+        </>
+      )}
     </span>
   );
 };
