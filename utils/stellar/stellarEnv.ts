@@ -1,6 +1,3 @@
-export const STELLAR_ENABLED =
-  process.env.NEXT_PUBLIC_STELLAR_ENABLED === "true";
-
 export const getStellarHorizonUrl = (
   network: "stellar-mainnet" | "stellar-testnet"
 ) => {

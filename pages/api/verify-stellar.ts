@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     where: {
       discordServerId: body.discordServerId,
       discordMemberId: body.discordMemberId,
-      starknetNetwork: body.network, // This field might need to be renamed to support multiple chains
+      starknetNetwork: body.network,
     },
     relations: ["discordServer"],
   });
@@ -54,7 +54,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     ...messageToSign,
     domain: {
       ...messageToSign.domain,
-      chainId: body.network, // Use the network name as chainId for Stellar
+      chainId: body.network,
     },
   };
 

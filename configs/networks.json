@@ -3,7 +3,7 @@
     "label": "Starknet Mainnet",
     "name": "mainnet",
     "url": "https://starknet.preview.apibara.org",
-    "indexer": false,
+    "indexer": true,
     "description": "The Starknet mainnet",
     "verifyPage": "verify",
     "chain": "starknet"
