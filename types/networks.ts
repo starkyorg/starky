@@ -1,6 +1,7 @@
 export type StarknetNetworkName = "mainnet" | "goerli" | "sepolia";
+export type StellarNetworkName = "stellar-mainnet" | "stellar-testnet";
 export type NetworkName =
   | StarknetNetworkName
   | "ethereum-mainnet"
-  | "stellar-mainnet"
-  | "stellar-testnet";
+  | StellarNetworkName;
+export type ChainType = "starknet" | "ethereum" | "stellar";

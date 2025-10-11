@@ -9,6 +9,7 @@ import {
   disconnect as starknetDisconnect,
 } from "starknetkit";
 import { INFURA_PROJECT_ID, ETHEREUM_ENABLED } from "../ethereumEnv";
+import { ChainType } from "../../../types/networks";
 
 type WalletContextType = {
   connect: (networkName: string) => Promise<void>;
@@ -16,7 +17,7 @@ type WalletContextType = {
   account: string | null;
   provider: ethers.BrowserProvider | null;
   chainId: number | string | null;
-  networkType: "ethereum" | "starknet" | null;
+  networkType: ChainType | null;
   signMessage: (message: string) => Promise<string>;
   balance: string | null;
 };
@@ -27,9 +28,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [account, setAccount] = useState<string | null>(null);
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [chainId, setChainId] = useState<number | string | null>(null);
-  const [networkType, setNetworkType] = useState<
-    "ethereum" | "starknet" | null
-  >(null);
+  const [networkType, setNetworkType] = useState<ChainType | null>(null);
   const [wcProvider, setWcProvider] = useState<any>(null);
   const [balance, setBalance] = useState<string | null>(null);
 
