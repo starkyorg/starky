@@ -67,8 +67,6 @@ const VerifyPage = ({
 }: Props) => {
   const router = useRouter();
   const { discordServerId, discordMemberId, customLink } = router.query;
-
-  // Initialize all hooks first (before any conditional returns)
   const [account, setAccount] = useState<any>(undefined);
   const [noStarknetWallet, setNotStarknetWallet] = useState<boolean>(false);
   const [wrongStarknetNetwork, setWrongStarknetNetwork] =
