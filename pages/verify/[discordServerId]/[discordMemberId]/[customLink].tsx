@@ -1,8 +1,6 @@
 import { useCallback, useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Signature } from "starknet";
-import { connect as starknetConnect, disconnect } from "starknetkit";
 import ReactConfetti from "react-confetti";
 
 import Logo from "../../../../components/Logo";
@@ -12,6 +10,12 @@ import { DiscordMemberRepository, setupDb } from "../../../../db";
 import { getDiscordServerInfo } from "../../../../discord/utils";
 import { StarknetNetworkName } from "../../../../types/networks";
 import messageToSign from "../../../../utils/starknet/message";
+import { getVerificationAdapters } from "../../../../utils/starknet/wallet/adapterRegistry";
+import { WalletAdapterError } from "../../../../utils/starknet/wallet/errors";
+import { isCartridgeControllerEnabled } from "../../../../utils/starknet/wallet/featureFlags";
+import { isExpectedStarknetNetwork } from "../../../../utils/starknet/wallet/network";
+import { createVerifyFlowOrchestrator } from "../../../../utils/starknet/wallet/verifyFlowOrchestrator";
+import { StarknetWalletAdapter } from "../../../../utils/starknet/wallet/types";
 import WatchTowerLogger from "../../../../watchTower";
 import DiscordServerInfo from "../../../../components/verification/DiscordServerInfo";
 import WalletInfo from "../../../../components/verification/WalletInfo";
@@ -72,9 +76,13 @@ const VerifyPage = ({
   const [unverifiedSignature, setUnverifiedSignature] = useState<string>("");
   const [chainId, setChainId] = useState<string>("");
   const [isArgent, setIsArgent] = useState<boolean>(false);
+  const [activeAdapter, setActiveAdapter] = useState<StarknetWalletAdapter | null>(
+    null
+  );
   const [isSwitching, setIsSwitching] = useState<boolean>(false);
   const [switchError, setSwitchError] = useState<boolean>(false);
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
+  const cartridgeEnabled = isCartridgeControllerEnabled();
   const [windowDimension, setWindowDimension] = useState<{
     width: number;
     height: number;
@@ -87,76 +95,24 @@ const VerifyPage = ({
     });
   }, []);
 
-  const connectToStarknet = useCallback(async () => {
-    const { wallet } = await starknetConnect();
-    if (!wallet) {
-      setNotStarknetWallet(true);
-      return;
-    }
-    WatchTowerLogger.info("Wallet information", wallet);
-    const chain =
-      wallet.account.provider.chainId ||
-      wallet.provider.chainId ||
-      wallet.chainId;
-    setChainId(chain);
-
-    // Always set the account so disconnect button is available
-    setAccount(wallet.account);
-
-    if (
-      starknetNetwork !==
-      Object.keys(chainAliasByNetwork)[
-        Object.values(chainAliasByNetwork).findIndex((aliases) =>
-          aliases.includes(chain)
-        )
-      ]
-    ) {
-      setWrongStarknetNetwork(true);
-    } else {
-      setWrongStarknetNetwork(false);
-    }
-
-    const isArgentWallet = wallet.id.toLowerCase().includes("argent");
-    setIsArgent(isArgentWallet);
-
-    const currentChainId =
-      wallet.account?.provider.chainId ||
-      wallet.provider?.chainId ||
-      wallet.chainId;
-    const validChainIds = chainAliasByNetwork[starknetNetwork];
-
-    const getTargetChainId = () => {
-      return chainAliasByNetwork[starknetNetwork][1];
-    };
-
-    const handleNetworkSwitch = async (wallet: any) => {
+  const handleNetworkSwitch = useCallback(
+    async (wallet: any, adapter: StarknetWalletAdapter) => {
       setIsSwitching(true);
       try {
         await wallet.request({
           type: "wallet_switchStarknetChain",
-          params: { chainId: getTargetChainId() },
+          params: { chainId: chainAliasByNetwork[starknetNetwork][1] },
         });
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const { wallet: refreshedWallet } = await starknetConnect();
+        const refreshedConnection = await adapter.connect();
+        setChainId(refreshedConnection.chainId);
 
-        if (!refreshedWallet) {
-          setSwitchError(true);
-          setTimeout(() => setSwitchError(false), 5000);
-          return;
-        }
-
-        const newChainId =
-          refreshedWallet.account?.provider.chainId ||
-          refreshedWallet.provider?.chainId ||
-          refreshedWallet.chainId;
-        setChainId(newChainId);
-        const isValid = chainAliasByNetwork[starknetNetwork].some(
-          (id) => id.toLowerCase() === newChainId?.toLowerCase()
-        );
-
-        if (isValid) {
-          setAccount(refreshedWallet.account);
+        if (
+          isExpectedStarknetNetwork(refreshedConnection.chainId, starknetNetwork)
+        ) {
+          setActiveAdapter(adapter);
+          setAccount(refreshedConnection.account);
           setWrongStarknetNetwork(false);
           setShowSuccess(true);
           setTimeout(() => setShowSuccess(false), 2000);
@@ -167,70 +123,147 @@ const VerifyPage = ({
       } catch (error: any) {
         setSwitchError(true);
         setTimeout(() => setSwitchError(false), 5000);
-        WatchTowerLogger.error("Network switch failed:", error);
+        WatchTowerLogger.error("Network switch failed", error);
       } finally {
         setIsSwitching(false);
       }
-    };
+    },
+    [starknetNetwork]
+  );
 
-    if (!validChainIds.includes(currentChainId)) {
-      setWrongStarknetNetwork(true);
+  const connectWithAdapter = useCallback(
+    async (adapterId: "legacy" | "cartridge") => {
+      setNotStarknetWallet(false);
+      setUnverifiedSignature("");
 
-      if (isArgentWallet) {
-        await handleNetworkSwitch(wallet);
+      const adapter = getVerificationAdapters(cartridgeEnabled).find(
+        (candidate) => candidate.id === adapterId
+      );
+
+      if (!adapter) {
+        setNotStarknetWallet(true);
         return;
       }
 
+      try {
+        const connection = await adapter.connect();
+        WatchTowerLogger.info("Wallet information", {
+          walletId: connection.walletId,
+          address: connection.address,
+          chainId: connection.chainId,
+        });
+
+        setActiveAdapter(adapter);
+        setAccount(connection.account);
+        setChainId(connection.chainId);
+
+        const isArgentWallet = (connection.walletId || "")
+          .toLowerCase()
+          .includes("argent");
+        setIsArgent(isArgentWallet);
+
+        if (!isExpectedStarknetNetwork(connection.chainId, starknetNetwork)) {
+          setWrongStarknetNetwork(true);
+
+          if (isArgentWallet && connection.wallet?.request && adapter.id === "legacy") {
+            await handleNetworkSwitch(connection.wallet, adapter);
+          }
+          return;
+        }
+
+        setWrongStarknetNetwork(false);
+      } catch (error: any) {
+        if (
+          error instanceof WalletAdapterError &&
+          error.code === "WALLET_UNAVAILABLE"
+        ) {
+          setNotStarknetWallet(true);
+          return;
+        }
+
+        setUnverifiedSignature(error?.message || "wallet connection failed");
+        WatchTowerLogger.error("Wallet connection failed", error);
+      }
+    },
+    [cartridgeEnabled, handleNetworkSwitch, starknetNetwork]
+  );
+
+  const connectToStarknet = useCallback(async () => {
+    await connectWithAdapter("legacy");
+  }, [connectWithAdapter]);
+
+  const connectToCartridge = useCallback(async () => {
+    await connectWithAdapter("cartridge");
+  }, [connectWithAdapter]);
+
+  const sign = useCallback(async () => {
+    if (!account || !activeAdapter) return;
+
+    const resolvedDiscordServerId = Array.isArray(discordServerId)
+      ? discordServerId[0]
+      : discordServerId;
+    const resolvedDiscordMemberId = Array.isArray(discordMemberId)
+      ? discordMemberId[0]
+      : discordMemberId;
+    const resolvedCustomLink = Array.isArray(customLink) ? customLink[0] : customLink;
+
+    if (!resolvedDiscordServerId || !resolvedDiscordMemberId || !resolvedCustomLink) {
+      setUnverifiedSignature("verification context is incomplete, please retry");
       return;
     }
 
-    setWrongStarknetNetwork(false);
-  }, [starknetNetwork]);
+    setUnverifiedSignature("");
+    setVerifyingSignature(true);
 
-  const verifySignature = useCallback(
-    async (signature: Signature) => {
-      if (!account) return;
-      setUnverifiedSignature("");
-      setVerifyingSignature(true);
-      try {
-        await axios.post("/api/verify", {
-          account: account?.address,
-          signature,
-          discordServerId,
-          discordMemberId,
-          customLink,
-          network: starknetNetwork,
-        });
-        setVerifiedSignature(true);
-        setVerifyingSignature(false);
-      } catch (e: any) {
-        WatchTowerLogger.error(
-          "Signature verification failed with data",
-          e.response?.data
-        );
-        setVerifyingSignature(false);
-        setUnverifiedSignature(`
-        ${e.response?.data?.message}.
-        ${e.response?.data?.error}
-          `);
-      }
-    },
-    [customLink, discordMemberId, discordServerId, account, starknetNetwork]
-  );
+    const connectedAdapter: StarknetWalletAdapter = {
+      ...activeAdapter,
+      connect: async () => ({
+        address: account.address.toLowerCase(),
+        chainId,
+        account,
+      }),
+    };
 
-  const sign = useCallback(async () => {
-    if (!account) return;
-    try {
-      const messageCopy = {
-        ...messageToSign,
-        domain: { ...messageToSign.domain, chainId },
-      };
-      const signature = await account.signMessage(messageCopy);
-      await verifySignature(signature);
-    } catch (e: any) {
-      WatchTowerLogger.error(e.message, e);
+    const orchestrator = createVerifyFlowOrchestrator({
+      adapter: connectedAdapter,
+      messageTemplate: messageToSign,
+      submitVerification: async (payload) => {
+        await axios.post("/api/verify", payload);
+      },
+    });
+
+    const result = await orchestrator.run({
+      discordServerId: resolvedDiscordServerId,
+      discordMemberId: resolvedDiscordMemberId,
+      customLink: resolvedCustomLink,
+      network: starknetNetwork,
+    });
+
+    setVerifyingSignature(false);
+
+    if (result.status === "verified") {
+      setVerifiedSignature(true);
+      return;
     }
-  }, [account, verifySignature, chainId]);
+
+    if (result.status === "wrong_network") {
+      setWrongStarknetNetwork(true);
+      return;
+    }
+
+    setUnverifiedSignature(
+      `${result.shortMessage}${result.advancedMessage ? `. ${result.advancedMessage}` : ""}`
+    );
+    WatchTowerLogger.error("Signature verification failed", result);
+  }, [
+    account,
+    activeAdapter,
+    chainId,
+    customLink,
+    discordMemberId,
+    discordServerId,
+    starknetNetwork,
+  ]);
 
   let starknetWalletDiv = (
     <div>
@@ -243,6 +276,18 @@ const VerifyPage = ({
           >
             {isSwitching ? "Switching Networks..." : "Connect Starknet Wallet"}
           </button>
+          {cartridgeEnabled && (
+            <>
+              <br />
+              <button
+                className={styles.connect}
+                onClick={connectToCartridge}
+                disabled={isSwitching}
+              >
+                Connect Cartridge Controller
+              </button>
+            </>
+          )}
         </div>
       )}
 
@@ -344,7 +389,12 @@ const VerifyPage = ({
           onDisconnect={() => {
             setAccount(undefined);
             setWrongStarknetNetwork(false);
-            disconnect().catch(WatchTowerLogger.error);
+            setActiveAdapter(null);
+            activeAdapter
+              ?.disconnect()
+              .catch((error) =>
+                WatchTowerLogger.error("Error during disconnect", error)
+              );
           }}
         />
 
