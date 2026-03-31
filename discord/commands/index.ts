@@ -96,62 +96,62 @@ export type SlashCommandData = {
 export const interactionHandlers: HandlerConfig[] = [
   {
     type: "chatInput",
-    identifier: "starky-add-config",
+    identifier: "realms-add-config",
     handler: handleInitialConfigCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-delete-config",
+    identifier: "realms-delete-config",
     handler: handleDeleteConfigCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-connect",
+    identifier: "realms-connect",
     handler: handleConnectCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-disconnect",
+    identifier: "realms-disconnect",
     handler: handleDisconnectCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-refresh",
+    identifier: "realms-refresh",
     handler: handleRefreshCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-view-config",
+    identifier: "realms-view-config",
     handler: handleViewConfigCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-debug-user",
+    identifier: "realms-debug-user",
     handler: handleDebugUserCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-set-config-custom-api",
+    identifier: "realms-set-config-custom-api",
     handler: handleSetConfigCustomApiCommand,
   },
   {
     type: "chatInput",
-    identifier: "help",
+    identifier: "realms-help",
     handler: handleHelpCommand,
   },
   {
     type: "chatInput",
-    identifier: "list-configs",
+    identifier: "realms-list-configs",
     handler: handleListConfigsCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-analytics",
+    identifier: "realms-analytics",
     handler: handleAnalyticsCommand,
   },
   {
     type: "chatInput",
-    identifier: "starky-dashboard",
+    identifier: "realms-dashboard",
     handler: handleDashboardCommand,
   },
   {
@@ -237,16 +237,16 @@ export const interactionHandlers: HandlerConfig[] = [
 
 export const slashCommandsArray: SlashCommandData[] = [
   {
-    name: "starky-connect",
+    name: "realms-connect",
     description: "Connect your Starknet wallet to this Discord server",
   },
   {
-    name: "starky-disconnect",
+    name: "realms-disconnect",
     description: "Disconnect your Starknet wallet from this Discord server",
   },
   {
-    name: "starky-add-config",
-    description: "Add a starky configuration to this server",
+    name: "realms-add-config",
+    description: "Add a Realms configuration to this server",
     options: [
       {
         type: "role",
@@ -258,16 +258,16 @@ export const slashCommandsArray: SlashCommandData[] = [
     ],
   },
   {
-    name: "starky-delete-config",
-    description: "Delete a Starky configuration from this server",
+    name: "realms-delete-config",
+    description: "Delete a Realms configuration from this server",
   },
   {
-    name: "starky-refresh",
-    description: "Refresh your Starky roles on this server",
+    name: "realms-refresh",
+    description: "Refresh your Realms roles on this server",
   },
   {
-    name: "starky-view-config",
-    description: "View your Starky configurations on this server",
+    name: "realms-view-config",
+    description: "View your Realms configurations on this server",
     options: [
       {
         type: "role",
@@ -278,7 +278,7 @@ export const slashCommandsArray: SlashCommandData[] = [
     ],
   },
   {
-    name: "starky-debug-user",
+    name: "realms-debug-user",
     description: "Debug a user on this server",
     options: [
       {
@@ -290,21 +290,21 @@ export const slashCommandsArray: SlashCommandData[] = [
     ],
   },
   {
-    name: "starky-set-config-custom-api",
+    name: "realms-set-config-custom-api",
     description:
       "Set a custom API URI for a configuration (Instead of Starkscan)",
   },
-  { name: "help", description: "Get help with Starky" },
+  { name: "realms-help", description: "Get help with Realms" },
   {
-    name: "list-configs",
-    description: "View your Starky configurations on this server",
+    name: "realms-list-configs",
+    description: "View your Realms configurations on this server",
   },
   {
-    name: "starky-analytics",
+    name: "realms-analytics",
     description: "View analytics for this server",
   },
   {
-    name: "starky-dashboard",
-    description: "View the Starky dashboard for this server",
+    name: "realms-dashboard",
+    description: "View the Realms dashboard for this server",
   },
 ];

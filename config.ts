@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
 import parseDatabaseUrl from "ts-parse-database-url";
+import { getAppBaseUrl } from "./utils/appUrl";
 
 dotenv.config({ path: ".env.local" });
 
@@ -23,7 +24,7 @@ const config = {
   NEXT_PUBLIC_DISCORD_CLIENT_ID:
     process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID || "",
   DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN || "",
-  BASE_URL: process.env.BASE_URL || "http://localhost:8080",
+  BASE_URL: getAppBaseUrl(process.env),
   DB_HOST,
   DB_PORT,
   DB_USERNAME,

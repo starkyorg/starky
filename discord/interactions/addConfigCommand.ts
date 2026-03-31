@@ -73,7 +73,7 @@ export const handleBackButton = async (
   if (!config) {
     await interaction.reply({
       content:
-        "❌ Invalid configuration state. Please start over with /starky-config.",
+        "❌ Invalid configuration state. Please start over with /realms-add-config.",
       ephemeral: true,
     });
     return;
@@ -105,7 +105,7 @@ const handleBackToRole = async (
 ) => {
   await interaction.update({
     content:
-      "❌ Configuration cancelled. Please start over with /starky-config command and select a role.",
+      "❌ Configuration cancelled. Please start over with /realms-add-config and select a role.",
     components: [],
   });
   delete ongoingConfigurationsCache[interaction.guildId!];

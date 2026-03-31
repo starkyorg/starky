@@ -5,7 +5,7 @@ import { callContract } from "../utils/starknet/call";
 import WatchTowerLogger from "../watchTower";
 
 export const name = "Wallet detector (Argent only)";
-// Only refreshing when connecting the wallet or when using the /starky-refresh command
+// Only refreshing when connecting the wallet or when using the /realms-refresh command
 export const refreshInCron = false;
 export const refreshOnTransfer = false;
 export const networks = ["mainnet", "sepolia"];

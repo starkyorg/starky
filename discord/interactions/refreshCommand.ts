@@ -46,7 +46,7 @@ export const handleRefreshCommand = async (
   if (!updated) {
     await interaction.editReply({
       content:
-        "You haven't connected your wallet to this server. Please connect your wallet using `/starky-connect`.",
+        "You haven't connected your wallet to this server. Please connect your wallet using `/realms-connect`.",
     });
     return;
   }

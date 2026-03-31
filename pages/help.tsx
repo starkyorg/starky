@@ -81,7 +81,7 @@ const HelpPage = () => {
                 </li>
                 <li>
                   type
-                  <span className={styles.redText}> /starky-add-config </span>
+                  <span className={styles.redText}> /realms-add-config </span>
                   in any channel (you need to be the admin of the server)
                 </li>
                 <li>answer the questions that the bot asks you</li>
@@ -94,12 +94,12 @@ const HelpPage = () => {
                 <li>
                   you can create as many configurations as you want in one
                   Discord server. Type{" "}
-                  <span className={styles.redText}> /starky-add-config </span>
+                  <span className={styles.redText}> /realms-add-config </span>
                   as many times as needed
                 </li>
                 <li>
                   you can also easily delete a configuration by typing
-                  <span className={styles.redText}>/starky-delete-config</span>
+                  <span className={styles.redText}>/realms-delete-config</span>
                   and following instructions
                 </li>
               </ul>
@@ -108,7 +108,7 @@ const HelpPage = () => {
             <CollapsibleSection title="How does my community link Starky to their Starknet wallet?">
               <p>
                 Once the bot is installed, they type
-                <span className={styles.redText}>/starky-connect</span>
+                <span className={styles.redText}>/realms-connect</span>
                 anywhere in the server and follow the instructions.
               </p>
             </CollapsibleSection>

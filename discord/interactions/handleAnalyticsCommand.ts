@@ -3,6 +3,7 @@ import { ChatInputCommandInteraction, Client } from "discord.js";
 import { v4 as uuidv4 } from "uuid"; // For token generation
 
 import { saveTokenToDatabase } from "../../utils/database"; // updated import
+import { buildAppUrl } from "../../utils/appUrl";
 
 export const handleAnalyticsCommand = async (
   interaction: ChatInputCommandInteraction,
@@ -20,7 +21,7 @@ export const handleAnalyticsCommand = async (
     // Save using unified dashboard token storage
     await saveTokenToDatabase(guildId, userId, token);
 
-    const analyticsUrl = `${process.env.BASE_URL}/analytics/${guildId}/${token}`;
+    const analyticsUrl = buildAppUrl(`/analytics/${guildId}/${token}`);
 
     await interaction.reply({
       content: `View analytics here: [Click Here](${analyticsUrl})`,

@@ -3,6 +3,7 @@ import { ChatInputCommandInteraction, Client } from "discord.js";
 import { v4 as uuidv4 } from "uuid"; // For token generation
 
 import { saveTokenToDatabase } from "../../utils/database";
+import { buildAppUrl } from "../../utils/appUrl";
 
 export const handleDashboardCommand = async (
   interaction: ChatInputCommandInteraction,
@@ -24,7 +25,7 @@ export const handleDashboardCommand = async (
     await saveTokenToDatabase(guildId, userId, token);
 
     // Construct the dashboard URL with the token
-    const dashboardUrl = `${process.env.BASE_URL}/dashboard/${guildId}/${token}`;
+    const dashboardUrl = buildAppUrl(`/dashboard/${guildId}/${token}`);
 
     // Send the URL to the user in an ephemeral message
     await interaction.reply({

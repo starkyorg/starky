@@ -15,6 +15,10 @@ import messageToSign from "../../../../utils/starknet/message";
 import WatchTowerLogger from "../../../../watchTower";
 import DiscordServerInfo from "../../../../components/verification/DiscordServerInfo";
 import WalletInfo from "../../../../components/verification/WalletInfo";
+import {
+  buildStarknetConnectors,
+  CARTRIDGE_DOCS_URL,
+} from "../../../../utils/starknet/connectors";
 
 import styles from "../../../../styles/Verify.module.scss";
 
@@ -88,7 +92,9 @@ const VerifyPage = ({
   }, []);
 
   const connectToStarknet = useCallback(async () => {
-    const { wallet } = await starknetConnect();
+    const { wallet } = await starknetConnect({
+      connectors: buildStarknetConnectors() as any,
+    });
     if (!wallet) {
       setNotStarknetWallet(true);
       return;
@@ -138,7 +144,9 @@ const VerifyPage = ({
         });
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        const { wallet: refreshedWallet } = await starknetConnect();
+        const { wallet: refreshedWallet } = await starknetConnect({
+          connectors: buildStarknetConnectors() as any,
+        });
 
         if (!refreshedWallet) {
           setSwitchError(true);
@@ -317,8 +325,15 @@ const VerifyPage = ({
           </div>
         ) : (
           <div>
-            No Starknet wallet detected. We recommend using Argent Wallet for
-            best experience.
+            No Starknet wallet detected. We recommend using Argent Wallet or {" "}
+            <a
+              href={CARTRIDGE_DOCS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Cartridge Controller
+            </a>
+            .
           </div>
         )}
       </div>

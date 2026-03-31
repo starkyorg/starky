@@ -176,7 +176,7 @@ export const handleConnectCommand = async (
 
       await interaction.reply({
         content:
-          "You have already linked a wallet to this Discord server on all networks. Use /starky-disconnect first if you want to link a new one",
+          "You have already linked a wallet to this Discord server on all networks. Use /realms-disconnect first if you want to link a new one",
         components: [actionRow],
         ephemeral: true,
       });
@@ -198,7 +198,7 @@ export const handleConnectCommand = async (
       const verificationUrl = `${config.BASE_URL}/${network.verifyPage}/${guildId}/${userId}/${memberData.customLink}`;
 
       await interaction.reply({
-        content: `Go to this link: ${verificationUrl} and verify your identity on this network: ${memberData.starknetNetwork}! You can start over by using /starky-disconnect command.`,
+        content: `Go to this link: ${verificationUrl} and verify your identity on this network: ${memberData.starknetNetwork}! You can start over by using /realms-disconnect command.`,
         ephemeral: true,
       });
       return;
@@ -218,7 +218,7 @@ export const handleConnectCommand = async (
     );
 
     await interaction.reply({
-      content: "On what network do you want to connect to Starky?",
+      content: "On what network do you want to connect to Realms?",
       components: [row],
       ephemeral: true,
     });
@@ -263,7 +263,7 @@ export const handleUserNetworkConfigCommand = async (
 
   if (existingConnection && existingConnection.starknetWalletAddress !== null) {
     await interaction.reply({
-      content: `Already connected to the ${selectedNetwork} network. Please disconnect first using /starky-disconnect.`,
+      content: `Already connected to the ${selectedNetwork} network. Please disconnect first using /realms-disconnect.`,
       ephemeral: true,
     });
     return;

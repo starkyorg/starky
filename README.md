@@ -12,14 +12,14 @@ Don't hesitate to join our Telegram group to ask any questions related to Starky
 
 Starky is a Discord bot. To use Starky, a Discord server admin can install the Starky application. This application takes the form of a bot that lives inside your Discord server, and implements a few [application commands](https://discord.com/developers/docs/interactions/application-commands).
 
-The first application command is `/starky-add-config` and can be used only by the admin. With this command, the admin can configure Starky, namely:
+The first application command is `/realms-add-config` and can be used only by the admin. With this command, the admin can configure Starky, namely:
 
 - the Starknet network to use Starky on (Sepolia or Mainnet)
 - the Discord role to assign to the discord users who match the criteria
 - the Starky module to use (ERC-721, ERC-20, etc.)
 - some module specific settings (for ERC-721, the address of the contract to use for token gating; for ERC-20, the contract address and minimum token balance required)
 
-Then, discord users can use the `/starky-connect` command to link their Starknet identity to the Discord server. When they use this command, they receive a custom link that drives them to a web interface where they can link their Starknet wallet to this Discord server by signing a message. This message is verified by the backend by calling the `is_valid_signature` method of the user's account contract.
+Then, discord users can use the `/realms-connect` command to link their Starknet identity to the Discord server. When they use this command, they receive a custom link that drives them to a web interface where they can link their Starknet wallet to this Discord server by signing a message. This message is verified by the backend by calling the `is_valid_signature` method of the user's account contract.
 
 Once a user's Starknet identity has been linked to the discord server, the Starky backend checks, on a regular basis, if the user's Starknet wallet matches the Starky module's specific conditions. For the ERC-721 Starky module, for instance, Starky checks if the user owns at least 1 NFT from the collection. For the ERC-20 module, it checks if the user has at least the minimum required token balance.
 
@@ -27,13 +27,13 @@ If the user matches the conditions, Starky gives the configured role to the user
 
 Other commands available:
 
-- `/starky-disconnect` for a user to unlink his Starknet wallet to the Discord server
-- `/starky-delete-config` for an admin to remove one of the Starky configurations setup on the Discord server
-- `/starky-refresh` for refreshing you roles according to the server configurations
-- `/starky-view-config` for an admin to check a configuration's settings
-- `/starky-debug-user` for moderators to refresh a user's roles and collect informations about them and why it may not work
-- `/starky-set-config-custom-api` for an admin to setup an API override. By default Starky is fetching data at Starkscan's API for every configs, but you can use your own.
-- `/help` to display a list of all available commands and their usage.
+- `/realms-disconnect` for a user to unlink his Starknet wallet to the Discord server
+- `/realms-delete-config` for an admin to remove one of the Starky configurations setup on the Discord server
+- `/realms-refresh` for refreshing you roles according to the server configurations
+- `/realms-view-config` for an admin to check a configuration's settings
+- `/realms-debug-user` for moderators to refresh a user's roles and collect informations about them and why it may not work
+- `/realms-set-config-custom-api` for an admin to setup an API override. By default Starky is fetching data at Starkscan's API for every configs, but you can use your own.
+- `/realms-help` to display a list of all available commands and their usage.
 
 # Starky technical components
 
@@ -105,7 +105,7 @@ replacing `DISCORD_CLIENT_ID` with your Discord application ID from step 1.
 
 ## Step 5: configure Starky on your Discord server
 
-Just enter `/starky-configure` and follow instructions!
+Just enter `/realms-add-config` and follow instructions!
 
 # Run Starky locally (dev)
 
@@ -175,9 +175,9 @@ event - compiled client and server successfully in 221 ms (179 modules)
 
 ## Step 7: configure Starky on your Discord server
 
-Just enter `/starky-add-config` and follow instructions!
+Just enter `/realms-add-config` and follow instructions!
 
-Debug any issue using `/starky-debug-user`.
+Debug any issue using `/realms-debug-user`.
 
 # Developing your own Starky module
 

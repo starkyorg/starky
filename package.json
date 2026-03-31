@@ -14,6 +14,7 @@
   "dependencies": {
     "@apibara/protocol": "2.0.0-beta.42",
     "@apibara/starknet": "2.0.0-beta.42",
+    "@cartridge/controller": "^0.13.10",
     "@discordjs/rest": "^2.1.0",
     "@grpc/grpc-js": "^1.13.3",
     "@tanstack/react-query": "^5.69.0",
