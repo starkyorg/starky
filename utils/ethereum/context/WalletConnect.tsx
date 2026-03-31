@@ -88,7 +88,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       } else {
         // Starknet connection
         const { wallet } = await starknetConnect({
-          connectors: buildStarknetConnectors() as any,
+          connectors: buildStarknetConnectors(networkName) as any,
         });
         if (!wallet) throw new Error("No wallet found");
 

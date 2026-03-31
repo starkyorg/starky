@@ -1,3 +1,5 @@
+import { constants } from "starknet";
+
 const mockInjectedConnector = jest.fn(
   ({ options }: { options: { id: string } }) => ({
     id: options.id,
@@ -17,6 +19,18 @@ const mockWebWalletConnector = jest.fn(() => ({
   name: "Argent Web Wallet",
   icon: { light: "", dark: "" },
 }));
+
+const mockCartridgeRequest = jest.fn();
+const mockCartridgeConnect = jest.fn();
+const mockCartridgeDisconnect = jest.fn();
+const mockCartridgeController = {
+  request: mockCartridgeRequest,
+  connect: mockCartridgeConnect,
+  disconnect: mockCartridgeDisconnect,
+};
+const mockCartridgeControllerConstructor = jest.fn(
+  () => mockCartridgeController
+);
 
 jest.mock(
   "starknetkit/injected",
@@ -46,7 +60,7 @@ jest.mock(
   "@cartridge/controller",
   () => ({
     __esModule: true,
-    default: jest.fn(),
+    default: mockCartridgeControllerConstructor,
   }),
   { virtual: true }
 );
@@ -63,6 +77,10 @@ describe("buildStarknetConnectors", () => {
     mockInjectedConnector.mockClear();
     mockArgentMobileConnector.mockClear();
     mockWebWalletConnector.mockClear();
+    mockCartridgeRequest.mockReset();
+    mockCartridgeConnect.mockReset();
+    mockCartridgeDisconnect.mockReset();
+    mockCartridgeControllerConstructor.mockClear();
 
     if (originalNavigator) {
       Object.defineProperty(global, "navigator", {
@@ -94,6 +112,34 @@ describe("buildStarknetConnectors", () => {
     expect(mockInjectedConnector).toHaveBeenCalledTimes(2);
     expect(mockArgentMobileConnector).toHaveBeenCalledTimes(1);
     expect(mockWebWalletConnector).toHaveBeenCalledTimes(1);
+  });
+
+  it("configures Cartridge for the selected Starknet network and reads chainId from the wallet API", async () => {
+    mockCartridgeConnect.mockResolvedValue({
+      address: "0x123",
+    });
+    mockCartridgeRequest.mockResolvedValue(constants.StarknetChainId.SN_SEPOLIA);
+
+    const connectors = buildStarknetConnectors("sepolia");
+    const cartridgeConnector = connectors.find(
+      (connector) => connector.id === CARTRIDGE_CONNECTOR_ID
+    );
+
+    expect(cartridgeConnector).toBeDefined();
+
+    const connected = await cartridgeConnector!.connect();
+
+    expect(mockCartridgeControllerConstructor).toHaveBeenCalledWith({
+      lazyload: true,
+      defaultChainId: constants.StarknetChainId.SN_SEPOLIA,
+    });
+    expect(mockCartridgeRequest).toHaveBeenCalledWith({
+      type: "wallet_requestChainId",
+    });
+    expect(connected).toEqual({
+      account: "0x123",
+      chainId: BigInt(constants.StarknetChainId.SN_SEPOLIA),
+    });
   });
 
   it("keeps Cartridge available on Safari while omitting injected wallets", () => {

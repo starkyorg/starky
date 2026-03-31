@@ -93,7 +93,7 @@ const VerifyPage = ({
 
   const connectToStarknet = useCallback(async () => {
     const { wallet } = await starknetConnect({
-      connectors: buildStarknetConnectors() as any,
+      connectors: buildStarknetConnectors(starknetNetwork) as any,
     });
     if (!wallet) {
       setNotStarknetWallet(true);
@@ -145,7 +145,7 @@ const VerifyPage = ({
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
         const { wallet: refreshedWallet } = await starknetConnect({
-          connectors: buildStarknetConnectors() as any,
+          connectors: buildStarknetConnectors(starknetNetwork) as any,
         });
 
         if (!refreshedWallet) {

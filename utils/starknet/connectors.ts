@@ -1,20 +1,17 @@
+import { constants } from "starknet";
 import { ArgentMobileConnector } from "starknetkit/argentMobile";
 import { InjectedConnector } from "starknetkit/injected";
 import { WebWalletConnector } from "starknetkit/webwallet";
+import { StarknetNetworkName } from "../../types/networks";
 
 type CartridgeController = {
   account?: {
     address: string;
-    provider?: {
-      chainId?: string | number | bigint;
-    };
   };
+  request?: (call: { type: string; params?: unknown }) => Promise<unknown>;
   connect: () => Promise<
     | {
         address?: string;
-        provider?: {
-          chainId?: string | number | bigint;
-        };
       }
     | undefined
   >;
@@ -22,9 +19,6 @@ type CartridgeController = {
   probe?: () => Promise<
     | {
         address?: string;
-        provider?: {
-          chainId?: string | number | bigint;
-        };
       }
     | undefined
   >;
@@ -59,13 +53,29 @@ const cartridgeIcon = createIconDataUri(
   "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='12' fill='#111827'/><path d='M31.5 16.5c-1.8-1.5-4.2-2.3-6.8-2.3-6 0-10.7 4.3-10.7 10s4.7 10 10.7 10c2.6 0 5-.8 6.8-2.3' fill='none' stroke='#fff' stroke-width='4' stroke-linecap='round'/></svg>"
 );
 
-let cartridgeController: CartridgeController | null = null;
-let cartridgeControllerPromise: Promise<CartridgeController> | null = null;
-
 const isSafariBrowser = () => {
   if (typeof navigator === "undefined") return false;
   return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 };
+
+const cartridgeChainIdByNetwork = {
+  mainnet: constants.StarknetChainId.SN_MAIN,
+  sepolia: constants.StarknetChainId.SN_SEPOLIA,
+} as const;
+
+const normalizeStarknetNetwork = (
+  networkName?: string
+): keyof typeof cartridgeChainIdByNetwork =>
+  networkName === "sepolia" ? "sepolia" : "mainnet";
+
+const cartridgeControllers = new Map<
+  keyof typeof cartridgeChainIdByNetwork,
+  CartridgeController
+>();
+const cartridgeControllerPromises = new Map<
+  keyof typeof cartridgeChainIdByNetwork,
+  Promise<CartridgeController>
+>();
 
 const toChainId = (chainId?: string | number | bigint) => {
   if (typeof chainId === "bigint") return chainId;
@@ -77,22 +87,34 @@ const toChainId = (chainId?: string | number | bigint) => {
   throw new Error("Cartridge chain ID is unavailable");
 };
 
-const getCartridgeController = async () => {
-  if (cartridgeController) return cartridgeController;
-  if (!cartridgeControllerPromise) {
-    cartridgeControllerPromise = import("@cartridge/controller").then(
+const getCartridgeController = async (
+  networkName: keyof typeof cartridgeChainIdByNetwork
+) => {
+  const existingController = cartridgeControllers.get(networkName);
+  if (existingController) return existingController;
+
+  const existingPromise = cartridgeControllerPromises.get(networkName);
+  if (existingPromise) return existingPromise;
+
+  const controllerPromise = import("@cartridge/controller").then(
       ({ default: Controller }) => {
-        cartridgeController = new Controller({ lazyload: true }) as any;
-        return cartridgeController as CartridgeController;
+        const controller = new Controller({
+          lazyload: true,
+          defaultChainId: cartridgeChainIdByNetwork[networkName],
+        }) as any;
+        cartridgeControllers.set(networkName, controller);
+        return controller as CartridgeController;
       }
     );
-  }
+  cartridgeControllerPromises.set(networkName, controllerPromise);
 
-  return cartridgeControllerPromise;
+  return controllerPromise;
 };
 
-const getCartridgeAccount = async () => {
-  const controller = await getCartridgeController();
+const getCartridgeAccount = async (
+  networkName: keyof typeof cartridgeChainIdByNetwork
+) => {
+  const controller = await getCartridgeController(networkName);
   if (controller.account) return controller.account;
   if (controller.probe) {
     const account = await controller.probe();
@@ -102,7 +124,30 @@ const getCartridgeAccount = async () => {
   throw new Error("Cartridge wallet is not connected");
 };
 
-const createCartridgeConnector = (): StarknetModalConnector => ({
+const getCartridgeChainId = async (
+  controller: CartridgeController,
+  networkName: keyof typeof cartridgeChainIdByNetwork
+) => {
+  if (controller.request) {
+    const walletChainId = await controller.request({
+      type: "wallet_requestChainId",
+    });
+
+    if (
+      typeof walletChainId === "string" ||
+      typeof walletChainId === "number" ||
+      typeof walletChainId === "bigint"
+    ) {
+      return toChainId(walletChainId);
+    }
+  }
+
+  return toChainId(cartridgeChainIdByNetwork[networkName]);
+};
+
+const createCartridgeConnector = (
+  networkName: keyof typeof cartridgeChainIdByNetwork
+): StarknetModalConnector => ({
   id: CARTRIDGE_CONNECTOR_ID,
   name: "Cartridge",
   icon: { light: cartridgeIcon, dark: cartridgeIcon },
@@ -111,7 +156,7 @@ const createCartridgeConnector = (): StarknetModalConnector => ({
   available: () => typeof window !== "undefined",
   ready: async () => false,
   connect: async () => {
-    const controller = await getCartridgeController();
+    const controller = await getCartridgeController(networkName);
     const account = await controller.connect();
 
     if (!account?.address) {
@@ -120,24 +165,27 @@ const createCartridgeConnector = (): StarknetModalConnector => ({
 
     return {
       account: account.address,
-      chainId: toChainId(account.provider?.chainId),
+      chainId: await getCartridgeChainId(controller, networkName),
     };
   },
   disconnect: async () => {
-    const controller = await getCartridgeController();
+    const controller = await getCartridgeController(networkName);
     await controller.disconnect();
   },
-  account: async () => (await getCartridgeAccount()) as any,
+  account: async () => (await getCartridgeAccount(networkName)) as any,
   chainId: async () => {
-    const account = await getCartridgeAccount();
-    return toChainId(account.provider?.chainId);
+    const controller = await getCartridgeController(networkName);
+    return getCartridgeChainId(controller, networkName);
   },
   get wallet() {
-    return cartridgeController as any;
+    return cartridgeControllers.get(networkName) as any;
   },
 });
 
-export const buildStarknetConnectors = (): StarknetModalConnector[] => {
+export const buildStarknetConnectors = (
+  networkName: StarknetNetworkName | string = "mainnet"
+): StarknetModalConnector[] => {
+  const starknetNetwork = normalizeStarknetNetwork(networkName);
   const connectors: StarknetModalConnector[] = [];
 
   if (!isSafariBrowser()) {
@@ -157,7 +205,7 @@ export const buildStarknetConnectors = (): StarknetModalConnector[] => {
     new ArgentMobileConnector() as unknown as StarknetModalConnector
   );
   connectors.push(new WebWalletConnector() as unknown as StarknetModalConnector);
-  connectors.push(createCartridgeConnector());
+  connectors.push(createCartridgeConnector(starknetNetwork));
 
   return connectors;
 };
