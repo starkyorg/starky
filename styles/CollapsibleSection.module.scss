@@ -1,7 +1,7 @@
 .section {
   margin-bottom: 0;
-  border-bottom: 1px solid #333;
-  
+  border-bottom: 1px solid var(--color-border-strong);
+
   .sectionHeader {
     display: flex;
     align-items: center;
@@ -12,20 +12,20 @@
     border: none;
     font-size: 1.1rem;
     cursor: pointer;
-    
+
     &:hover {
-      color: #3b3b3b;
+      color: var(--color-text-secondary);
     }
   }
-  
+
   .arrowRight, .arrowDown {
     margin-right: 0.5rem;
     font-size: 0.8rem;
   }
-  
+
   .sectionContent {
     padding: 1rem 0 1rem 1.5rem;
-    color: rgb(49, 49, 49);
+    color: var(--color-text-primary);
     text-align: left;
   }
 }

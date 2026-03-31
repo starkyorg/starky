@@ -67,10 +67,13 @@ jest.mock(
 
 import {
   buildStarknetConnectors,
-  CARTRIDGE_CONNECTOR_ID,
 } from "../utils/starknet/connectors";
+import {
+  connectCartridgeController,
+  resolveWalletChainId,
+} from "../utils/starknet/connection";
 
-describe("buildStarknetConnectors", () => {
+describe("starknet wallet connections", () => {
   const originalNavigator = global.navigator;
 
   afterEach(() => {
@@ -94,7 +97,7 @@ describe("buildStarknetConnectors", () => {
     Reflect.deleteProperty(global, "navigator");
   });
 
-  it("adds Cartridge alongside the default non-Safari connectors", () => {
+  it("adds the default non-Safari browser wallet connectors", () => {
     Object.defineProperty(global, "navigator", {
       configurable: true,
       value: { userAgent: "Mozilla/5.0 Chrome/123.0.0.0 Safari/537.36" },
@@ -107,27 +110,20 @@ describe("buildStarknetConnectors", () => {
       "braavos",
       "argentMobile",
       "argentWebWallet",
-      CARTRIDGE_CONNECTOR_ID,
     ]);
     expect(mockInjectedConnector).toHaveBeenCalledTimes(2);
     expect(mockArgentMobileConnector).toHaveBeenCalledTimes(1);
     expect(mockWebWalletConnector).toHaveBeenCalledTimes(1);
   });
 
-  it("configures Cartridge for the selected Starknet network and reads chainId from the wallet API", async () => {
+  it("connects Cartridge directly with the selected Starknet network", async () => {
     mockCartridgeConnect.mockResolvedValue({
       address: "0x123",
+      signMessage: jest.fn(),
     });
     mockCartridgeRequest.mockResolvedValue(constants.StarknetChainId.SN_SEPOLIA);
 
-    const connectors = buildStarknetConnectors("sepolia");
-    const cartridgeConnector = connectors.find(
-      (connector) => connector.id === CARTRIDGE_CONNECTOR_ID
-    );
-
-    expect(cartridgeConnector).toBeDefined();
-
-    const connected = await cartridgeConnector!.connect();
+    const connected = await connectCartridgeController("sepolia");
 
     expect(mockCartridgeControllerConstructor).toHaveBeenCalledWith({
       lazyload: true,
@@ -137,12 +133,30 @@ describe("buildStarknetConnectors", () => {
       type: "wallet_requestChainId",
     });
     expect(connected).toEqual({
+      controller: mockCartridgeController,
       account: "0x123",
-      chainId: BigInt(constants.StarknetChainId.SN_SEPOLIA),
+      walletAccount: expect.objectContaining({
+        address: "0x123",
+      }),
+      chainId: constants.StarknetChainId.SN_SEPOLIA,
+      walletId: "cartridge",
     });
   });
 
-  it("keeps Cartridge available on Safari while omitting injected wallets", () => {
+  it("falls back to wallet_requestChainId when a wallet does not expose provider.chainId", async () => {
+    const wallet = {
+      request: jest.fn().mockResolvedValue(constants.StarknetChainId.SN_MAIN),
+    };
+
+    await expect(resolveWalletChainId(wallet)).resolves.toBe(
+      constants.StarknetChainId.SN_MAIN
+    );
+    expect(wallet.request).toHaveBeenCalledWith({
+      type: "wallet_requestChainId",
+    });
+  });
+
+  it("keeps the browser-wallet list lean on Safari", () => {
     Object.defineProperty(global, "navigator", {
       configurable: true,
       value: { userAgent: "Version/17.0 Safari/605.1.15" },
@@ -153,7 +167,6 @@ describe("buildStarknetConnectors", () => {
     expect(connectors.map((connector) => connector.id)).toEqual([
       "argentMobile",
       "argentWebWallet",
-      CARTRIDGE_CONNECTOR_ID,
     ]);
     expect(mockInjectedConnector).not.toHaveBeenCalled();
   });

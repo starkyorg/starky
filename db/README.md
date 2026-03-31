@@ -68,7 +68,7 @@ LOG_EVERY_X_BLOCK=1
 Install the required Node.js dependencies:
 
 ```sh
-yarn install 
+pnpm install
 ```
 
 ---
@@ -78,7 +78,7 @@ yarn install
 Run your application to verify the database connection:
 
 ```sh
-yarn run dev or yarn start
+pnpm dev or pnpm start
 ```
 
 If successful, you should see a message confirming the connection to the database.
@@ -115,4 +115,3 @@ Your PostgreSQL database is now set up and ready to use. If you encounter issues
 ---
 
 ## Happy Coding! 🚀
-

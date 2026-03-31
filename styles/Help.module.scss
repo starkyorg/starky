@@ -7,15 +7,15 @@
 
 .helpContainer {
   max-width: 800px;
-  margin: 0 auto; 
+  margin: 0 auto;
 
   .helpHeader {
     display: flex;
     align-items: flex-start;
     gap: 0;
-    margin-top: 2rem; 
+    margin-top: 2rem;
   }
-  
+
 
   h1 {
     font-size: 2.5rem;
@@ -28,7 +28,7 @@
     margin-top: 0;
     margin-bottom: 1.5rem;
   }
-  
+
 
   .bulletList {
     list-style-type: disc;
@@ -70,7 +70,7 @@
       }
     }
   }
-  
+
   .githubTextSpace {
     margin-left: 8px;
   }
@@ -78,10 +78,10 @@
   .underlineText {
     text-decoration: underline;
   }
-  
+
   .redText {
-    color: #eb5757;
-    background-color: #87837826;
+    color: var(--color-danger);
+    background-color: rgba(135, 131, 120, 0.15);
     padding: 2.72px 5.44px;
     gap: 2px;
   }
@@ -99,11 +99,11 @@
   }
   @media (max-width: 768px) {
     padding-top: 2rem;
-  } 
+  }
 }
 
 
 .helpSections {
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--color-border-strong);
   margin-bottom: 2rem;
 }

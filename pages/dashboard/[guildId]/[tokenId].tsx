@@ -1,6 +1,4 @@
 import { NextPage, GetServerSideProps } from "next";
-import Logo from "../../../components/Logo";
-import SocialLinks from "../../../components/SocialLinks";
 import styles from "../../../styles/Dashboard.module.scss";
 import RedirectMessage from "../../../components/RedirectMessage"; // optional if you want same UI
 
@@ -52,17 +50,14 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
   if (error) {
     return (
       <div className={styles.container}>
-        <Logo />
         <h1>Error</h1>
         <p>{error}</p>
-        <SocialLinks />
       </div>
     );
   }
 
   return (
     <div className={styles.container}>
-      <Logo />
       <h1>Dashboard</h1>
       <Guild
         discordServerName={discordServerName!}
@@ -91,10 +86,10 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
                   <strong>Discord Role ID:</strong> {config.discordRoleId}
                 </div>
                 <div className={styles.configBlock}>
-                  <strong>Starky Module Type:</strong> {config.starkyModuleType}
+                  <strong>Module Type:</strong> {config.starkyModuleType}
                 </div>
                 <div className={styles.configBlock}>
-                  <strong>Starky Module Config:</strong>{" "}
+                  <strong>Module Config:</strong>{" "}
                   <pre className={styles.configValue}>
                     {JSON.stringify(config.starkyModuleConfig, null, 2)}
                   </pre>
@@ -114,7 +109,6 @@ const DashboardPage: NextPage<DashboardPageProps> = ({
           <p>No configurations available for this guild.</p>
         )}
       </section>
-      <SocialLinks />
     </div>
   );
 };

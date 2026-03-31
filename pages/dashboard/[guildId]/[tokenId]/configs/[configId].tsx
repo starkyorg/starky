@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { NextPage, GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import axios from "axios";
-import Logo from "../../../../../components/Logo";
-import SocialLinks from "../../../../../components/SocialLinks";
 import RedirectMessage from "../../../../../components/RedirectMessage";
 import Guild from "../../../../../components/guild/Guild";
 import {
@@ -67,10 +65,8 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
   if (error) {
     return (
       <div className={styles.container}>
-        <Logo />
         <h1>Error</h1>
         <p>{error}</p>
-        <SocialLinks />
       </div>
     );
   }
@@ -78,9 +74,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
   if (!formData) {
     return (
       <div className={styles.container}>
-        <Logo />
         <h1>Loading...</h1>
-        <SocialLinks />
       </div>
     );
   }
@@ -140,7 +134,6 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
 
   return (
     <div className={styles.container}>
-      <Logo />
       <h1>Edit Configuration</h1>
       <Guild
         discordServerName={discordServerName!}
@@ -199,7 +192,7 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
           {/* Module Type Selection */}
           <div className={styles.configBlock}>
             <label>
-              <strong>Starky Module Type:</strong>
+              <strong>Module Type:</strong>
               <select
                 value={formData.starkyModuleType}
                 onChange={(e) =>
@@ -308,8 +301,6 @@ const ConfigEditorPage: NextPage<ConfigEditorPageProps> = ({
           )}
         </form>
       </section>
-
-      <SocialLinks />
     </div>
   );
 };

@@ -1,0 +1,14 @@
+packages:
+  - .
+
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - "@reown/appkit"
+  - bufferutil
+  - cbor-extract
+  - keccak
+  - protobufjs
+  - rome
+  - secp256k1
+  - sharp
+  - utf-8-validate

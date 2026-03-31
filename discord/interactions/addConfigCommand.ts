@@ -550,9 +550,11 @@ export const handleModuleConfigCommand = async (
   if (!interaction.guildId) return;
 
   const moduleConfig: any = {};
-  interaction.fields.fields.forEach(
-    (fieldValue) => (moduleConfig[fieldValue.customId] = fieldValue.value)
-  );
+  interaction.fields.fields.forEach((fieldValue) => {
+    if ("value" in fieldValue) {
+      moduleConfig[fieldValue.customId] = fieldValue.value;
+    }
+  });
 
   const currentConfig = ongoingConfigurationsCache[interaction.guildId];
   ongoingConfigurationsCache[interaction.guildId].currentStep =

@@ -2,25 +2,52 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  animation: fade-in-up 0.4s ease-out;
 
   a {
     display: inline-block;
   }
 
-  .connect, .verify {
-    border: 1px solid black;
-    border-radius: 0.5rem;         
+  .connectActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .connect, .verify, .connectSecondary {
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
     padding: 1rem 2rem;
-    background-color: transparent;    
+    background-color: transparent;
     transition: background-color 0.3s ease;
     cursor: pointer;
-    margin-bottom: 1rem;
-  
+
     &:hover {
-      background-color: #fefee9;
+      background-color: var(--color-bg-hover);
     }
   }
-  
+
+  .connect {
+    [data-theme="dark"] & {
+      box-shadow: var(--glow-accent);
+      animation: subtle-glow 3s ease-in-out infinite;
+    }
+  }
+
+  .connectSecondary {
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+    background: color-mix(in srgb, var(--color-bg-surface) 75%, transparent);
+  }
+
+  @media (max-width: 640px) {
+    .connect,
+    .connectSecondary {
+      width: 100%;
+    }
+  }
+
   .sign {
     margin-top: 10px;
     display: inline-block;
@@ -31,18 +58,33 @@
     margin-bottom: 38px;
   }
 
+  .successState {
+    [data-theme="dark"] & {
+      box-shadow: var(--glow-success);
+    }
+
+    h1 {
+      [data-theme="dark"] & {
+        background: linear-gradient(90deg, var(--color-accent), var(--color-btn-primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    }
+  }
+
   .starknetWallet {
     word-wrap: break-word;
   }
   .advancedErrorMessage {
     font-size: 12px;
-    color: rgba(128, 128, 128, 0.765);
+    color: var(--color-text-muted);
     word-break: break-all;
   }
   /* cursor select effect */
   .advancedErrorMessage::selection {
-    background: black;
-    color: white;
+    background: var(--color-text-primary);
+    color: var(--color-bg);
   }
 }
 
@@ -57,12 +99,12 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #cccccc;
+  background-color: var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  color: #333;
+  color: var(--color-border-strong);
   font-size: 12px;
 }
 
@@ -85,7 +127,7 @@
 }
 
 .errorLink {
-  color: #c3453f;
+  color: var(--color-danger);
   font-weight: bold;
 }
 
@@ -106,4 +148,3 @@
   text-align: center;
   font-style: italic;
 }
-

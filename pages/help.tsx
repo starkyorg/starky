@@ -4,34 +4,29 @@ import Link from "next/link";
 import CollapsibleSection from "../components/CollapsibleSection";
 import styles from "../styles/Help.module.scss";
 import Image from "next/image";
-import Logo from "../components/Logo";
-import BackButton from "../components/BackButton";
 import github from "../components/github-icon.png";
-import SocialLinks from "../components/SocialLinks";
 
 const HelpPage = () => {
   return (
     <>
       <Head>
-        <title>Starky: Help</title>
-        <meta name="description" content="Help and documentation for Starky" />
+        <title>realms.gg: Help</title>
+        <meta name="description" content="Help and documentation for realms.gg" />
       </Head>
       <div className={styles.helpPageWrapper}>
         <main className={styles.helpContainer}>
-          <BackButton />
           <div className={styles.helpHeader}>
-            <Logo marginBottom={32} />
-            <h1>: wtf?</h1>
+            <h1>realms.gg: wtf?</h1>
           </div>
           <p className={styles.description}>
-            Starky token-gates your Discord channels with Starknet assets.
+            realms.gg token-gates your Discord channels with Starknet assets.
           </p>
 
           <div className={styles.helpSections}>
             <CollapsibleSection title="Summary">
               <ul className={styles.bulletList}>
                 <li>
-                  Starky is a Discord bot that lets you token-gate Discord
+                  realms.gg is a Discord bot that lets you token-gate Discord
                   channels with Starknet assets
                 </li>
                 <li>
@@ -51,11 +46,11 @@ const HelpPage = () => {
               </ul>
             </CollapsibleSection>
 
-            <CollapsibleSection title="How do I install Starky on my Discord server?">
+            <CollapsibleSection title="How do I install realms.gg on my Discord server?">
               <p className={styles.underlineText}>Discord role creation </p>
               <p>
-                Starky links a given role in your Discord server to conditions
-                on the Starknet blockchain. Before setting up your Starky bot,
+                realms.gg links a given role in your Discord server to conditions
+                on the Starknet blockchain. Before setting up your realms.gg bot,
                 we encourage you to create the role that you want to token-gate
                 on Discord.
               </p>
@@ -63,21 +58,21 @@ const HelpPage = () => {
                 Give super-power to this role (access to channels, feature on
                 the right tab) and you can install your bot!
               </p>
-              <p className={styles.underlineText}>Starky bot installation </p>
+              <p className={styles.underlineText}>realms.gg bot installation </p>
               <ul className={styles.bulletList}>
                 <li>
                   go to
                   <span className={styles.sLinks}>
-                    <Link href="https://starky.wtf/">
+                    <Link href="https://realms.gg/">
                       {" "}
-                      https://starky.wtf/{" "}
+                      https://realms.gg/{" "}
                     </Link>
                   </span>
                 </li>
                 <li>
                   go to <span className={styles.redText}>Server settings</span>
                   &gt; <span className={styles.redText}>Roles</span> and put
-                  Starky at the top of the list (otherwise it will not work)
+                  realms.gg at the top of the list (otherwise it will not work)
                 </li>
                 <li>
                   type
@@ -105,7 +100,7 @@ const HelpPage = () => {
               </ul>
             </CollapsibleSection>
 
-            <CollapsibleSection title="How does my community link Starky to their Starknet wallet?">
+            <CollapsibleSection title="How does my community link realms.gg to their Starknet wallet?">
               <p>
                 Once the bot is installed, they type
                 <span className={styles.redText}>/realms-connect</span>
@@ -113,7 +108,7 @@ const HelpPage = () => {
               </p>
             </CollapsibleSection>
 
-            <CollapsibleSection title="Is Starky open source?">
+            <CollapsibleSection title="Is realms.gg open source?">
               <p>
                 Yes. Please find our GitHub project here:
                 <span className={styles.linksnotunderline}>
@@ -138,13 +133,13 @@ const HelpPage = () => {
               </p>
               <p>
                 You can create other conditions for your own community and even
-                submit it to be integrated to the core Starky product.y
+                submit it to be integrated to the core realms.gg product.
               </p>
             </CollapsibleSection>
 
-            <CollapsibleSection title="Can I self-host Starky?">
+            <CollapsibleSection title="Can I self-host realms.gg?">
               <p>
-                Yes. We host Starky for teams who prefer not to host him
+                Yes. We host realms.gg for teams who prefer not to host it
                 themselves but you can definitely host it on your own:
                 <span className={styles.linksnotunderline}>
                   <Link href="https://github.com/nmalzieu/starky">
@@ -162,18 +157,17 @@ const HelpPage = () => {
 
             <CollapsibleSection title="Starknet Testnet or Mainnet?">
               <p>
-                Both, you choose the network when you install the Starky bot.
+                Both, you choose the network when you install the realms.gg bot.
               </p>
             </CollapsibleSection>
 
-            <CollapsibleSection title="Who is behind Starky?">
+            <CollapsibleSection title="Who is behind realms.gg?">
               <p>
                 We&apos;re Noé & Pol, founders of Pxls, bullish on Starknet and
                 building stuffs for the community.
               </p>
             </CollapsibleSection>
           </div>
-          <SocialLinks />
         </main>
       </div>
     </>

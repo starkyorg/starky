@@ -163,12 +163,12 @@ export const handleSetConfigCustomApiModalInput = async (
 ) => {
   await assertManageRoles(interaction);
   if (!interaction.guildId) return;
-  const uri = interaction.fields.fields.find(
-    (field) => field.customId === "set-config-custom-api-modal-uri"
-  )?.value;
-  const paramName = interaction.fields.fields.find(
-    (field) => field.customId === "set-config-custom-api-modal-param-name"
-  )?.value;
+  const uri = interaction.fields.getTextInputValue(
+    "set-config-custom-api-modal-uri"
+  );
+  const paramName = interaction.fields.getTextInputValue(
+    "set-config-custom-api-modal-param-name"
+  );
 
   const currentConfig = ongoingConfigurationsCache[interaction.guildId];
 

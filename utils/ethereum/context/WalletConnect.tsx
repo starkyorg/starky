@@ -8,6 +8,7 @@ import {
   connect as starknetConnect,
   disconnect as starknetDisconnect,
 } from "starknetkit";
+import { resolveWalletChainId } from "../../starknet/connection";
 import { buildStarknetConnectors } from "../../starknet/connectors";
 import { INFURA_PROJECT_ID, ETHEREUM_ENABLED } from "../ethereumEnv";
 
@@ -88,14 +89,12 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       } else {
         // Starknet connection
         const { wallet } = await starknetConnect({
-          connectors: buildStarknetConnectors(networkName) as any,
+          connectors: buildStarknetConnectors() as any,
         });
-        if (!wallet) throw new Error("No wallet found");
+        if (!wallet || !wallet.account?.address)
+          throw new Error("No wallet found");
 
-        const chain =
-          wallet.account?.provider.chainId ||
-          wallet.provider?.chainId ||
-          wallet.chainId;
+        const chain = await resolveWalletChainId(wallet);
         setAccount(wallet.account.address);
         setChainId(chain);
         setNetworkType("starknet");

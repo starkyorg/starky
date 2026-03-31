@@ -9,9 +9,7 @@ import {
 } from "chart.js";
 import { NextPageContext } from "next";
 import { Pie } from "react-chartjs-2";
-import Logo from "../../../components/Logo";
 import RedirectMessage from "../../../components/RedirectMessage";
-import SocialLinks from "../../../components/SocialLinks";
 import Guild from "../../../components/guild/Guild";
 import DownloadButton from "../../../components/DownloadButton";
 import {
@@ -95,7 +93,6 @@ const AnalyticsPage = ({
   return (
     <div>
       <div>
-        <Logo />
         <h1>Analytics</h1>
       </div>
       <div className={styles.serverInfo}>
@@ -133,9 +130,6 @@ const AnalyticsPage = ({
         )}
       </div>
 
-      <div className={styles.sectionHeading}>
-        <SocialLinks />
-      </div>
     </div>
   );
 };

@@ -1,12 +1,11 @@
-import React from "react";
-import Logo from "../../../../components/Logo";
+import React, { ReactElement } from "react";
+import Layout from "../../../../components/Layout";
 import styles from "../../../../styles/Verify.module.scss";
 
 // Static Stellar Verification Page
 const VerifyStellar: React.FC = () => {
   return (
     <div className={styles.verifyContainer}>
-      <Logo />
       <h1>Stellar Verification</h1>
       <p>
         Welcome to the Stellar verification page!
@@ -32,5 +31,7 @@ const VerifyStellar: React.FC = () => {
     </div>
   );
 };
+
+(VerifyStellar as any).getLayout = (page: ReactElement) => <Layout variant="hero" showNav={false}>{page}</Layout>;
 
 export default VerifyStellar;

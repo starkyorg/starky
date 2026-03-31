@@ -125,9 +125,8 @@ Starky needs a Postgres database to save information, so make sure to have the c
 # Clone the repository
 git clone git@github.com:nmalzieu/starky.git
 
-# Install dependencies with yarn or npm
-yarn install
-npm install
+# Install dependencies with pnpm
+pnpm install
 ```
 
 ## Step 4: configure Starky
@@ -153,12 +152,11 @@ replacing `DISCORD_CLIENT_ID` with your Discord application ID from step 1.
 ## Step 6: run Starky locally in dev mode
 
 ```bash
-yarn dev
+pnpm dev
 
 # You should see the following
-yarn run v1.22.17
-$ nodemon server.ts
-[nodemon] 2.0.19
+$ pnpm dev
+[nodemon] 3.x
 [nodemon] to restart at any time, enter `rs`
 [nodemon] watching path(s): *.*
 [nodemon] watching extensions: ts,json
@@ -172,6 +170,16 @@ event - compiled client and server successfully in 221 ms (179 modules)
 > Registered Discord slash commands!
 > Discord interactions set up successfully
 ```
+
+For local WebAuthn and passkey flows, run the dev server over trusted HTTPS:
+
+```bash
+mkcert -install
+mkcert -key-file .cert/localhost-key.pem -cert-file .cert/localhost.pem localhost 127.0.0.1 ::1
+pnpm dev:https
+```
+
+Self-signed certificates that the browser does not trust will still break passkey flows.
 
 ## Step 7: configure Starky on your Discord server
 

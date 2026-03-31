@@ -1,21 +1,21 @@
 .downloadButton {
   margin: 1rem 0;
   padding: 0.5rem 1rem;
-  background-color: #8b4513;
-  color: white;
+  background-color: var(--color-accent);
+  color: var(--color-bg-surface);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #a0522d;
+    background-color: var(--color-accent-hover);
   }
 
   &:disabled {
-    background-color: #9ca3af;
+    background-color: var(--color-text-muted);
     cursor: not-allowed;
   }
 }

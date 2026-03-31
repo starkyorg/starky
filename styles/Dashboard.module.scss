@@ -12,15 +12,15 @@
 }
 
 .configItem {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #fefee9;
+    background-color: var(--color-bg-hover);
   }
 }
 
@@ -29,26 +29,26 @@
 
 .configBlock {
   margin-bottom: 0.75rem;
-  color: #333;
+  color: var(--color-border-strong);
 
   strong {
     display: inline-block;
     min-width: 160px;
     font-weight: 600;
-    color: #111;
+    color: var(--color-text-primary);
   }
 }
 
 .configValue {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
   padding: 0.75rem;
   font-size: 0.875rem;
-  font-family: "Courier New", Courier, monospace;
+  font-family: var(--font-mono);
   white-space: pre-wrap;
   word-break: break-word;
-  border-radius: 0.5rem;
-  color: #374151;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
 }
 
 .buttonGroup {
@@ -60,42 +60,42 @@
 
 .primaryButton {
   padding: 0.5rem 1rem;
-  background-color: #8b4513;
-  color: white;
+  background-color: var(--color-accent);
+  color: var(--color-bg-surface);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #a0522d;
+    background-color: var(--color-accent-hover);
   }
 
   &:disabled {
-    background-color: #9ca3af;
+    background-color: var(--color-text-muted);
     cursor: not-allowed;
   }
 }
 
 .secondaryButton {
   padding: 0.5rem 1rem;
-  background-color: #6b7280;
-  color: white;
+  background-color: var(--color-text-muted);
+  color: var(--color-bg-surface);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #4b5563;
+    background-color: var(--color-border-strong);
   }
 }
 
-.successMessage, 
+.successMessage,
 .errorMessage {
   margin-top: 1rem;
   padding: 0.75rem;
@@ -105,16 +105,16 @@
 .successMessage {
 
   background-color: #d1fae5;
-  border: 1px solid #10b981;
-  border-radius: 0.5rem;
+  border: 1px solid var(--color-success);
+  border-radius: var(--radius-md);
   color: #065f46;
 }
 
 .errorMessage {
   background-color: #fee2e2;
-  border: 1px solid #ef4444;
-  border-radius: 0.5rem;
-  color: #dc2626;
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
 }
 
 .editButton {
@@ -122,16 +122,16 @@
   text-decoration: none;
   font-size: 0.875rem;
   padding: 0.375rem 0.75rem;
-  background-color: #8b4513;
-  color: white;
+  background-color: var(--color-accent);
+  color: var(--color-bg-surface);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #a0522d;
+    background-color: var(--color-accent-hover);
     text-decoration: none;
   }
 }

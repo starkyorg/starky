@@ -28,19 +28,19 @@
 
 .title {
   margin-bottom: 0.75rem;
-  
+
   @media (max-width: 768px) {
     font-size: 1.75rem;
   }
-  
+
   @media (max-width: 480px) {
     font-size: 1.5rem;
   }
 }
 
 .description {
-  color: #8b7355; 
-  
+  color: var(--color-text-secondary);
+
   @media (max-width: 768px) {
     font-size: 0.95rem;
   }
@@ -48,29 +48,29 @@
 
 /* Example Card styles */
 .card {
-  border: 1px solid #e8dcc6; 
-  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background-color: #faf9f5; 
-  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.08); 
+  background-color: var(--color-bg-surface);
+  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.08);
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(139, 115, 85, 0.12);
-    border-color: #d4c4a8;
+    border-color: var(--color-border);
   }
 }
 
 .cardHeader {
   padding: 1.25rem 1.25rem 0.75rem;
-  border-bottom: 1px solid #f0e6d2; 
-  background: linear-gradient(135deg, #fdfcf7 0%, #f8f5ef 100%); 
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-surface) 100%);
 }
 
 .cardTitle {
-  color: #2d2d2d; 
-  
+  color: var(--color-text-primary);
+
   @media (max-width: 768px) {
     font-size: 1.25rem;
   }
@@ -78,12 +78,12 @@
 
 .cardDescription {
   font-size: 0.875rem;
-  color: #8b7355; 
+  color: var(--color-text-secondary);
 }
 
 .cardContent {
   padding: 1.25rem;
-  
+
   @media (max-width: 480px) {
     padding: 1rem;
   }
@@ -91,7 +91,7 @@
 
 .explanation {
   font-size: 0.875rem;
-  color: #8b7355; 
+  color: var(--color-text-secondary);
   margin-bottom: 1rem;
   line-height: 1.5;
 }
@@ -99,27 +99,27 @@
 /* Code Block styles */
 .codeContainer {
   position: relative;
-  background-color: #f5f1e8; 
+  background-color: var(--color-bg-elevated);
   padding: 1rem;
   border-radius: 0.375rem;
   overflow-x: auto;
-  border: 1px solid #e8dcc6; 
-  
+  border: 1px solid var(--color-border);
+
   @media (max-width: 480px) {
     padding: 0.75rem;
   }
 }
 
 .code {
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.875rem;
   white-space: pre;
-  color: #2d2d2d; 
-  
+  color: var(--color-text-primary);
+
   @media (max-width: 768px) {
     font-size: 0.8rem;
   }
-  
+
   @media (max-width: 480px) {
     font-size: 0.75rem;
   }
@@ -136,17 +136,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #8b7355; 
+  color: var(--color-text-secondary);
   border-radius: 0.25rem;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: #ede4d3;
-    color: #2d2d2d;
+    background-color: var(--color-bg-elevated);
+    color: var(--color-text-primary);
   }
 
   &:active {
-    background-color: #e0d2bb;
+    background-color: var(--color-border);
   }
 }
 
@@ -156,8 +156,8 @@
 }
 
 .componentsTitle {
-  color: #2d2d2d;
-  
+  color: var(--color-text-primary);
+
   @media (max-width: 768px) {
     font-size: 1.1rem;
   }
@@ -167,8 +167,8 @@
   list-style-type: disc;
   padding-left: 1.25rem;
   font-size: 0.875rem;
-  color: #8b7355; 
-  
+  color: var(--color-text-secondary);
+
   @media (max-width: 480px) {
     padding-left: 1rem;
   }
@@ -176,7 +176,7 @@
 
 .componentsItem {
   margin-bottom: 0.25rem;
-  
+
   @media (max-width: 768px) {
     line-height: 1.4;
   }
@@ -184,13 +184,13 @@
 
 .componentName {
   font-weight: 500;
-  color: #2d2d2d; 
+  color: var(--color-text-primary);
 }
 
 /* Implementation Notes styles */
 .notesSection {
   margin-top: 2.5rem;
-  
+
   @media (max-width: 768px) {
     margin-top: 2rem;
   }
@@ -198,8 +198,8 @@
 
 .notesTitle {
   margin-bottom: 1rem;
-  color: #2d2d2d; 
-  
+  color: var(--color-text-primary);
+
   @media (max-width: 768px) {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
@@ -207,16 +207,16 @@
 }
 
 .notesContainer {
-  border: 1px solid #e8dcc6; 
-  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 1.5rem;
-  background-color: #faf9f5; 
-  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.08); 
-  
+  background-color: var(--color-bg-surface);
+  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.08);
+
   @media (max-width: 768px) {
     padding: 1.25rem;
   }
-  
+
   @media (max-width: 480px) {
     padding: 1rem;
   }
@@ -226,12 +226,12 @@
   font-size: 0.875rem;
   list-style-type: disc;
   padding-left: 1.25rem;
-  color: #8b7355; 
-  
+  color: var(--color-text-secondary);
+
   @media (max-width: 768px) {
     line-height: 1.4;
   }
-  
+
   @media (max-width: 480px) {
     padding-left: 1rem;
     font-size: 0.85rem;
@@ -240,11 +240,11 @@
 
 .notesItem {
   margin-bottom: 0.75rem;
-  
+
   @media (max-width: 480px) {
     margin-bottom: 0.6rem;
   }
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -252,5 +252,5 @@
 
 .notesItemTitle {
   font-weight: 500;
-  color: #2d2d2d; 
+  color: var(--color-text-primary);
 }

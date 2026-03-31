@@ -8,9 +8,9 @@
 }
 
 .card {
-  border: 1px solid #e5e5e5;
-  border-radius: 0.5rem;
-  background-color: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface);
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   max-width: 450px;
@@ -26,13 +26,13 @@
   padding: 1.25rem 1.25rem 0.75rem;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #333;
-  border-bottom: 1px solid #f0f0f0;
+  color: var(--color-border-strong);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .description {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--color-text-muted);
   padding: 0 1.25rem;
   line-height: 1.5;
 }
@@ -43,7 +43,7 @@
 
 .explanation {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--color-text-muted);
   margin-top: 1.5rem;
   display: flex;
   align-items: center;
@@ -53,7 +53,7 @@
 
 .bottomNote {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,8 +63,8 @@
 .loader {
   width: 20px;
   height: 20px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3498db;
+  border: 3px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-left: 10px;

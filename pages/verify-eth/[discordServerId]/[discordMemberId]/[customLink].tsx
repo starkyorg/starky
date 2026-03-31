@@ -1,9 +1,8 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, ReactElement } from "react";
 import { useRouter } from "next/router";
 import ReactConfetti from "react-confetti";
-import Logo from "../../../../components/Logo";
 
-import SocialLinks from "../../../../components/SocialLinks";
+import Layout from "../../../../components/Layout";
 import { DiscordMemberRepository, setupDb } from "../../../../db";
 import { getDiscordServerInfo } from "../../../../discord/utils";
 import WatchTowerLogger from "../../../../watchTower";
@@ -142,7 +141,6 @@ const VerifyEthPage = ({
 
   return (
     <div className={styles.verify}>
-      <Logo />
       <div>
         <DiscordServerInfo
           discordServerName={discordServerName}
@@ -181,10 +179,11 @@ const VerifyEthPage = ({
         )}
         {!verifiedSignature && ethereumWalletDiv}
       </div>
-      {process.env.NEXT_PUBLIC_STARKY_OFFICIAL && <SocialLinks />}
     </div>
   );
 };
+
+(VerifyEthPage as any).getLayout = (page: ReactElement) => <Layout variant="hero" showNav={false}>{page}</Layout>;
 
 export async function getServerSideProps({ res, query }: any) {
   await setupDb();
