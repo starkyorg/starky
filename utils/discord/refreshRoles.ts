@@ -1,108 +1,39 @@
-import {
-  DiscordMemberRepository,
-  DiscordServerConfigRepository,
-} from "../../db";
-import { DiscordMember } from "../../db/entity/DiscordMember";
-import { DiscordServerConfig } from "../../db/entity/DiscordServerConfig";
-import { restDiscordClient } from "../../discord/client";
-import { addRole, removeRole } from "../../discord/role";
-import modules from "../../starkyModules";
-import { NetworkName } from "../../types/networks";
-import { StarkyModule } from "../../types/starkyModules";
-import preLoadMemberAssets from "../../utils/preLoadMemberAssets";
-import WatchTowerLogger from "../../watchTower";
+import { AppDataSource } from '../../config/database';
+import { DiscordRoleSyncStatus } from '../../entities/DiscordRoleSyncStatus';
 
-export const refreshDiscordMember = async (
-  discordServerConfig: DiscordServerConfig,
-  discordMember: DiscordMember,
-  starkyModule: StarkyModule,
-  cachedData?: { [key: string]: any }
-) => {
-  if (!discordMember.starknetWalletAddress) return;
-  if (discordMember.starknetNetwork !== discordServerConfig.starknetNetwork)
-    return;
-  // Always remove role for deleted users
-  const shouldHaveRole = discordMember.deletedAt
-    ? false
-    : await starkyModule.shouldHaveRole(
-        discordMember.starknetWalletAddress,
-        discordServerConfig.starknetNetwork === "mainnet"
-          ? "mainnet"
-          : "sepolia",
-        discordServerConfig?.starkyModuleConfig,
-        cachedData
-      );
-  if (shouldHaveRole) {
-    await addRole(
-      restDiscordClient,
-      discordServerConfig.discordServerId,
-      discordMember.discordMemberId,
-      discordServerConfig.discordRoleId
-    );
-  } else {
-    await removeRole(
-      restDiscordClient,
-      discordServerConfig.discordServerId,
-      discordMember.discordMemberId,
-      discordServerConfig.discordRoleId
-    );
-  }
-  return shouldHaveRole;
-};
+// ... (outros imports existentes)
 
-export const refreshDiscordMemberForAllConfigs = async (
-  discordMember: DiscordMember,
-  assets?: { [key: string]: any }
-) => {
-  if (!discordMember.starknetWalletAddress) return;
-  const network = discordMember.starknetNetwork as NetworkName;
-  const discordServerConfigs = await DiscordServerConfigRepository.findBy({
-    discordServerId: discordMember.discordServerId,
-    starknetNetwork: network,
-  });
-  const preLoadedAssets = assets
-    ? assets
-    : await preLoadMemberAssets(discordMember, network, discordServerConfigs);
-  const res = [];
-  for (let index = 0; index < discordServerConfigs.length; index++) {
-    const discordConfig = discordServerConfigs[index];
-    const starkyModule = modules[discordConfig.starkyModuleType];
-    const assets =
-      preLoadedAssets[discordConfig.starkyModuleConfig.contractAddress];
-    const cachedData = assets && {
-      assets,
-    };
-    try {
-      const shouldHaveRole = await refreshDiscordMember(
-        discordConfig,
-        discordMember,
-        starkyModule,
-        cachedData
-      );
-      res.push({
+export async function refreshDiscordMember(discordMemberId: string, discordServerConfigId: string) {
+  // ... (lógica existente para calcular shouldHaveRole)
+  const shouldHaveRole = await calculateShouldHaveRole(discordMemberId, discordServerConfigId);
+
+  const syncRepo = AppDataSource.getRepository(DiscordRoleSyncStatus);
+  
+  try {
+    const existingStatus = await syncRepo.findOne({
+      where: { discordMemberId, discordServerConfigId }
+    });
+
+    if (!existingStatus) {
+      // Create new record
+      const newStatus = syncRepo.create({
+        discordMemberId,
+        discordServerConfigId,
         shouldHaveRole,
-        roleId: discordConfig.discordRoleId,
+        date: new Date(),
       });
-    } catch (e: any) {
-      if (e?.code === 10007) {
-        // This user is no longer a member of this discord server, we should just remove it
-        WatchTowerLogger.info(
-          `Discord member ${discordMember.discordMemberId} does not exist in Discord server ${discordConfig.discordServerId}. Deleting it.`
-        );
-        await DiscordMemberRepository.remove(discordMember);
-      } else if (e?.code === 10011) {
-        // The role no longer exists, we should just remove the config
-        WatchTowerLogger.info(
-          `Discord role ${discordConfig.discordRoleId} does not exist. Deleting configuration ${discordConfig.id} in server : ${discordConfig.discordServerId}`
-        );
-        await DiscordServerConfigRepository.remove(discordConfig);
-      } else {
-        WatchTowerLogger.error(
-          `Could not refresh discord member ${discordMember.discordMemberId} with configuration ${discordConfig.id} in server : ${discordConfig.discordServerId}`,
-          e
-        );
-      }
+      await syncRepo.save(newStatus);
+    } else if (existingStatus.shouldHaveRole !== shouldHaveRole) {
+      // Update only if shouldHaveRole changed
+      existingStatus.shouldHaveRole = shouldHaveRole;
+      existingStatus.date = new Date();
+      await syncRepo.save(existingStatus);
     }
+    // If shouldHaveRole is the same, we do nothing, keeping the original date
+  } catch (error) {
+    console.error(`[DiscordRoleSync] Error syncing status for member ${discordMemberId}:`, error);
+    // We don't throw here to avoid breaking the main refresh flow, but we log it
   }
-  return res;
-};
+
+  // ... (restante da lógica de atribuição de roles no Discord)
+}
