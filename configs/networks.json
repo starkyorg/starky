@@ -1,39 +1,37 @@
 [
   {
-    "label": "Starknet Mainnet",
-    "name": "mainnet",
-    "url": "https://starknet.preview.apibara.org",
-    "indexer": true,
-    "description": "The Starknet mainnet",
-    "verifyPage": "verify"
+    "id": "ethereum",
+    "name": "Ethereum",
+    "rpc": "https://mainnet.infura.io/v3/YOUR_PROJECT_ID",
+    "explorer": "https://etherscan.io",
+    "cron": false
   },
   {
-    "label": "Starknet Sepolia",
-    "name": "sepolia",
-    "url": "coming-soon",
-    "indexer": false,
-    "description": "The Starknet testnet",
-    "verifyPage": "verify"
+    "id": "polygon",
+    "name": "Polygon",
+    "rpc": "https://polygon-rpc.com",
+    "explorer": "https://polygonscan.com",
+    "cron": false
   },
   {
-    "label": "Ethereum Mainnet",
-    "name": "ethereum-mainnet",
-    "chainId": 1,
-    "url": "https://eth.llamarpc.com",
-    "explorerUrl": "https://etherscan.io",
-    "currency": "ETH",
-    "indexer": false,
-    "description": "The Ethereum mainnet",
-    "verifyPage": "verify-eth"
+    "id": "bsc",
+    "name": "Binance Smart Chain",
+    "rpc": "https://bsc-dataseed.binance.org/",
+    "explorer": "https://bscscan.com",
+    "cron": false
   },
   {
-    "label": "Stellar Mainnet",
-    "name": "stellar-mainnet",
-    "url": "https://stellar.org",
-    "explorerUrl": "https://stellar.expert/explorer/public",
-    "currency": "XLM",
-    "indexer": false,
-    "description": "The Stellar network",
-    "verifyPage": "verify-stellar"
+    "id": "arbitrum",
+    "name": "Arbitrum",
+    "rpc": "https://arb1.arbitrum.io/rpc",
+    "explorer": "https://arbiscan.io",
+    "cron": false
+  },
+  {
+    "id": "optimism",
+    "name": "Optimism",
+    "rpc": "https://mainnet.optimism.io",
+    "explorer": "https://optimistic.etherscan.io",
+    "cron": false
   }
 ]
