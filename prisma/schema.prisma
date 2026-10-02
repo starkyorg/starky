@@ -1,0 +1,10 @@
+// Adicionando o modelo de configurações de notificação ao schema do Prisma
+model NotificationSettings {
+  guildId               String @id
+  notificationChannelId String?
+  notifyRoleAdded       Boolean @default(false)
+  notifyWalletConnected  Boolean @default(false)
+  notifyRoleRemoved     Boolean @default(false)
+
+  @@map("notification_settings")
+}
