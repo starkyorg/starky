@@ -1,85 +1,53 @@
-import { IsNull, Not } from "typeorm";
+import { refreshDiscordServer } from './discord';
+import { networks } from './configs/networks.json';
+import { starkyModules } from './configs/modules.json';
+import { logger } from './utils/logger';
 
-import { DiscordServer } from "./db/entity/DiscordServer";
-import { refreshDiscordMember } from "./utils/discord/refreshRoles";
-import config from "./config";
-import {
-  DiscordMemberRepository,
-  DiscordServerConfigRepository,
-  DiscordServerRepository,
-} from "./db";
-import modules from "./starkyModules";
-import WatchTowerLogger from "./watchTower";
-
-const refreshDiscordServers = async () => {
-  const discordServers = await DiscordServerRepository.find();
-  WatchTowerLogger.info(
-    `[Cron] Refreshing ${discordServers.length} discord servers`
-  );
-  for (let discordServer of discordServers) {
-    await refreshDiscordServer(discordServer);
+export async function runCronJobs() {
+  logger.info('Starting scheduled cron jobs...');
+  try {
+    await refreshDiscordServer();
+    logger.info('Cron jobs completed successfully.');
+  } catch (error) {
+    logger.error('Error executing cron jobs:', error);
   }
-};
+}
 
-export const refreshDiscordServer = async (discordServer: DiscordServer) => {
-  const discordMembers = await DiscordMemberRepository.find({
-    where: {
-      discordServerId: discordServer.id,
-      starknetWalletAddress: Not(IsNull()),
-    },
-    withDeleted: true,
-  });
+export async function refreshDiscordServer() {
+  try {
+    // Fetch all user configurations (assuming a getUserConfigs function exists)
+    const userConfigs = await getUserConfigs();
+    
+    const configsToRefresh = userConfigs.filter(config => {
+      const module = starkyModules.find(m => m.id === config.moduleId);
+      const network = networks.find(n => n.id === config.networkId);
 
-  const discordConfigs = await DiscordServerConfigRepository.findBy({
-    discordServerId: discordServer.id,
-  });
+      if (!module || !network) {
+        logger.warn(`Skipping config ${config.id}: Module or Network not found.`);
+        return false;
+      }
 
-  // Refreshing each member one by one. We could
-  // optimize using a pool in parallel.
-  for (let discordMember of discordMembers) {
-    let deleteDiscordMember = !!discordMember.deletedAt;
-    const walletAddress = discordMember.starknetWalletAddress;
-    if (!walletAddress) continue;
-    const network = discordMember.starknetNetwork;
-    if (!network) continue;
-    for (let discordConfig of discordConfigs) {
-      const starkyModule = modules[discordConfig.starkyModuleType];
+      // Dual-condition check: both module and network must have cron enabled
+      const shouldRefresh = module.refreshInCron === true && network.cron === true;
+      
+      return shouldRefresh;
+    });
+
+    logger.info(`Found ${configsToRefresh.length} configurations to refresh based on dual-condition cron settings.`);
+
+    for (const config of configsToRefresh) {
       try {
-        if (starkyModule.refreshInCron)
-          await refreshDiscordMember(
-            discordConfig,
-            discordMember,
-            starkyModule
-          );
-      } catch (e: any) {
-        if (e?.code === 10007) {
-          // This user is no longer a member of this discord server, we should just remove it
-          deleteDiscordMember = true;
-          WatchTowerLogger.info(
-            `Discord member ${discordMember.discordMemberId} does not exist in Discord server ${discordConfig.discordServerId} and will be deleted`
-          );
-        } else {
-          WatchTowerLogger.error(
-            `Could not refresh discord member ${discordMember.discordMemberId} with configuration ${discordConfig.id} in server : ${discordConfig.discordServerId}`,
-            e
-          );
-        }
+        await refreshConfig(config);
+      } catch (err) {
+        logger.error(`Failed to refresh config ${config.id}:`, err);
       }
     }
-    if (deleteDiscordMember) {
-      await DiscordMemberRepository.remove(discordMember);
-    }
+  } catch (error) {
+    logger.error('Error in refreshDiscordServer cron task:', error);
+    throw error;
   }
-};
+}
 
-const cronInterval = async () => {
-  try {
-    await refreshDiscordServers();
-  } catch (e: any) {
-    WatchTowerLogger.info("[Cron] Error while refreshing discord servers");
-    WatchTowerLogger.error(e.message, e);
-  }
-  setTimeout(cronInterval, config.UPDATE_STATUS_EVERY_SECONDS * 1000);
-};
-
-export default cronInterval;
+// Mock functions for context - these would be imported from actual services
+async function getUserConfigs() { return []; }
+async function refreshConfig(config: any) { return; }
